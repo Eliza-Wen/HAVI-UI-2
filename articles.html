@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oncology Related Articles - HAVI</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .articles-page {
+            padding: 2rem 0 4rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #42a5f5;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .back-link:hover {
+            color: #ec407a;
+        }
+        
+        .back-link::before {
+            content: '← ';
+        }
+        
+        .filter-bar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-bar select,
+        .filter-bar input {
+            padding: 0.7rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-bar select:focus,
+        .filter-bar input:focus {
+            outline: none;
+            border-color: #42a5f5;
+        }
+        
+        .filter-bar button {
+            padding: 0.7rem 1.5rem;
+            background: linear-gradient(135deg, #42a5f5, #1976d2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .filter-bar button:hover {
+            transform: scale(1.05);
+        }
+        
+        .load-more-container {
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .load-more-btn {
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, #ec407a, #d81b60);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .load-more-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .load-more-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">HAVI</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Legal</a></li>
+                <li><a href="#">Sign in</a></li>
+                <li>
+                    <select class="language-selector">
+                        <option value="en">English</option>
+                        <option value="zh">中文</option>
+                        <option value="es">Español</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Articles Page -->
+    <section class="articles-page">
+        <div class="container">
+            <a href="index.html" class="back-link">Back to Home</a>
+            
+            <h1 class="section-title">Oncology Related Articles</h1>
+            
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <input type="text" id="filterSearch" placeholder="Search articles..." style="flex: 1; min-width: 250px;">
+                <select id="filterYear">
+                    <option value="">All Years</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                </select>
+                <select id="filterType">
+                    <option value="">All Types</option>
+                    <option value="clinical">Clinical Trial</option>
+                    <option value="review">Review</option>
+                    <option value="research">Research</option>
+                </select>
+                <button id="applyFilter">Apply Filters</button>
+            </div>
+            
+            <!-- Articles Grid -->
+            <div id="articlesContainer" class="articles-grid">
+                <div class="loading">Loading articles...</div>
+            </div>
+            
+            <!-- Load More Button -->
+            <div class="load-more-container">
+                <button id="loadMoreBtn" class="load-more-btn">Load More Articles</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 HAVI. Evidence-based cancer guidance platform.</p>
+        </div>
+    </footer>
+
+    <script src="articles.js"></script>
+</body>
+</html>

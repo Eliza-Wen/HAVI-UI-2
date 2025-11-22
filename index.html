@@ -1,12 +1,94 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='UTF-8'>
-    <title>HAVI UI</title>
-    <link rel='stylesheet' href='style.css'>
-  </head>
-  <body>
-    <h1>Welcome to HAVI UI</h1>
-    <script src='script.js'></script>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAVI - Evidence-based Cancer Guidance</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">HAVI</div>
+            <ul class="nav-links">
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Legal</a></li>
+                <li><a href="#">Sign in</a></li>
+                <li>
+                    <select class="language-selector">
+                        <option value="en">English</option>
+                        <option value="zh">中文</option>
+                        <option value="es">Español</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">Evidence-based cancer guidance for confident decisions</h1>
+            <p class="hero-subtitle">Personalized guidance, AI-assisted triage, and practical resources for patients and their families.</p>
+        </div>
+    </section>
+
+    <!-- Search Bar -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search conditions, symptoms, or treatments" aria-label="Search">
+                <button class="search-btn">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Boxes -->
+    <section class="features">
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <div class="feature-icon">🏥</div>
+                    <h3>Hospital Access</h3>
+                    <span class="coming-soon">Coming Soon</span>
+                    <p>Connect to hospital appointment system.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Search Cancer Information</h3>
+                    <p>Search conditions, symptoms, or treatments.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-driven Treatment Decision</h3>
+                    <p>Describe your current situation (brief).</p>
+                    <button class="ai-btn">Start AI Assessment</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommended Articles -->
+    <section class="articles">
+        <div class="container">
+            <h2 class="section-title">Recommended Articles</h2>
+            <div id="articlesContainer" class="articles-grid">
+                <div class="loading">Loading articles...</div>
+            </div>
+            <div class="show-more-container">
+                <a href="articles.html" class="show-more-btn">Show More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 HAVI. Evidence-based cancer guidance platform.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
 </html>
