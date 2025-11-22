@@ -93,8 +93,9 @@ body {
 .hero-subtitle {
     font-size: 1.2rem;
     color: #666;
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
+    white-space: nowrap;
 }
 
 /* Search Section */
@@ -305,6 +306,210 @@ body {
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 }
 
+/* Insurance Section */
+.insurance {
+    padding: 3rem 0 4rem;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+}
+
+.insurance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.insurance-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    border: 2px solid transparent;
+}
+
+.insurance-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+}
+
+.insurance-card.featured {
+    border-color: #42a5f5;
+    background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%);
+}
+
+.featured-badge {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background: linear-gradient(135deg, #42a5f5, #1976d2);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.insurance-logo {
+    font-size: 3.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.insurance-card h3 {
+    color: #1976d2;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.insurance-type {
+    text-align: center;
+    color: #ec407a;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.insurance-desc {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    min-height: 80px;
+}
+
+.insurance-features {
+    list-style: none;
+    margin-bottom: 1.5rem;
+}
+
+.insurance-features li {
+    color: #666;
+    padding: 0.4rem 0;
+    font-size: 0.95rem;
+}
+
+.insurance-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #42a5f5, #1976d2);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.insurance-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(66, 165, 245, 0.4);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 2.5rem;
+    border-radius: 20px;
+    max-width: 600px;
+    position: relative;
+    animation: slideDown 0.3s;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close-modal {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-modal:hover {
+    color: #333;
+}
+
+.modal-content h2 {
+    color: #1976d2;
+    margin-bottom: 1.5rem;
+}
+
+#modalBody {
+    margin-bottom: 2rem;
+    color: #555;
+    line-height: 1.8;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.modal-btn.primary {
+    background: linear-gradient(135deg, #42a5f5, #1976d2);
+    color: white;
+}
+
+.modal-btn.secondary {
+    background: #e0e0e0;
+    color: #555;
+}
+
+.modal-btn:hover {
+    transform: scale(1.05);
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .nav-links {
@@ -318,6 +523,7 @@ body {
 
     .hero-subtitle {
         font-size: 1rem;
+        white-space: normal;
     }
 
     .search-bar {
@@ -330,7 +536,8 @@ body {
     }
 
     .feature-grid,
-    .articles-grid {
+    .articles-grid,
+    .insurance-grid {
         grid-template-columns: 1fr;
     }
 
@@ -341,5 +548,14 @@ body {
 
     .nav-brand {
         font-size: 1.5rem;
+    }
+    
+    .modal-content {
+        margin: 10% 5%;
+        padding: 1.5rem;
+    }
+    
+    .modal-actions {
+        flex-direction: column;
     }
 }

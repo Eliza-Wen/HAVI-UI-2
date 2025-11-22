@@ -114,3 +114,86 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Insurance modal functions
+function showInsuranceModal(productName) {
+    const modal = document.getElementById('insuranceModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    
+    const productDetails = {
+        'MediCare Plus': {
+            title: 'MediCare Plus - Critical Illness Insurance',
+            content: `
+                <h3>Comprehensive Critical Illness Coverage</h3>
+                <p><strong>Coverage Amount:</strong> Up to $500,000</p>
+                <p><strong>Key Benefits:</strong></p>
+                <ul>
+                    <li>Covers 100+ critical illnesses including all major cancers</li>
+                    <li>Lump sum payout upon diagnosis with no waiting period</li>
+                    <li>Cancer treatment support and second opinion services</li>
+                    <li>24/7 medical hotline with specialist access</li>
+                    <li>No medical examination required for coverage up to $100,000</li>
+                </ul>
+                <p><strong>Premium:</strong> Starting from $150/month</p>
+                <p><strong>Special Features:</strong> Early stage cancer coverage, worldwide protection, and flexible payment terms.</p>
+            `
+        },
+        'HealthGuard Premium': {
+            title: 'HealthGuard Premium - Medical & Critical Illness',
+            content: `
+                <h3>All-in-One Health Protection</h3>
+                <p><strong>Coverage Amount:</strong> Unlimited annual coverage</p>
+                <p><strong>Key Benefits:</strong></p>
+                <ul>
+                    <li>Comprehensive hospitalization and surgery coverage</li>
+                    <li>Critical illness coverage with cancer-specific benefits</li>
+                    <li>Access to cancer specialists and treatment centers globally</li>
+                    <li>Second and third opinion services at top medical institutions</li>
+                    <li>Experimental and targeted therapy coverage</li>
+                    <li>Rehabilitation and post-treatment care</li>
+                </ul>
+                <p><strong>Premium:</strong> Starting from $280/month</p>
+                <p><strong>Special Features:</strong> VIP treatment access, global emergency medical evacuation, and lifetime renewability guarantee.</p>
+            `
+        },
+        'CancerCare Shield': {
+            title: 'CancerCare Shield - Specialized Cancer Insurance',
+            content: `
+                <h3>Dedicated Cancer Protection</h3>
+                <p><strong>Coverage Amount:</strong> Up to $1,000,000</p>
+                <p><strong>Key Benefits:</strong></p>
+                <ul>
+                    <li>Specialized coverage for all cancer types and stages</li>
+                    <li>Immunotherapy and targeted therapy treatments</li>
+                    <li>Clinical trial participation support</li>
+                    <li>Chemotherapy, radiotherapy, and hormone therapy</li>
+                    <li>Surgical procedures and reconstructive surgery</li>
+                    <li>Comprehensive rehabilitation and recovery support</li>
+                </ul>
+                <p><strong>Premium:</strong> Starting from $200/month</p>
+                <p><strong>Special Features:</strong> Cancer recurrence coverage, palliative care support, and family genetic counseling.</p>
+            `
+        }
+    };
+    
+    const product = productDetails[productName];
+    if (product) {
+        modalTitle.textContent = product.title;
+        modalBody.innerHTML = product.content;
+        modal.style.display = 'block';
+    }
+}
+
+function closeInsuranceModal() {
+    const modal = document.getElementById('insuranceModal');
+    modal.style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('insuranceModal');
+    if (event.target === modal) {
+        closeInsuranceModal();
+    }
+}

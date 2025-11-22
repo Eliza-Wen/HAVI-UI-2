@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Information - HAVI</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="i18n.js"></script>
+    <style>
+        .legal-page {
+            padding: 2rem 0 4rem;
+            background: white;
+        }
+        
+        .legal-section {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .legal-section h2 {
+            color: #1976d2;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .legal-section h3 {
+            color: #42a5f5;
+            margin: 1.5rem 0 0.8rem;
+            font-size: 1.3rem;
+        }
+        
+        .legal-section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        
+        .legal-section ul {
+            color: #555;
+            line-height: 1.8;
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .legal-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #42a5f5;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .back-link:hover {
+            color: #ec407a;
+        }
+        
+        .back-link::before {
+            content: '← ';
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">HAVI</div>
+            <ul class="nav-links">
+                <li><a href="index.html" data-i18n="navHome">Home</a></li>
+                <li><a href="legal.html" class="active" data-i18n="navLegal">Legal</a></li>
+                <li><a href="auth.html" data-i18n="navSignIn">Sign in</a></li>
+                <li>
+                    <select class="language-selector">
+                        <option value="en">English</option>
+                        <option value="zh-CN">简体中文</option>
+                        <option value="zh-TW">繁體中文</option>
+                        <option value="es">Español</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Legal Page Content -->
+    <section class="legal-page">
+        <div class="container">
+            <a href="index.html" class="back-link">Back to Home</a>
+            
+            <h1 class="section-title" data-i18n="legalTitle">Legal Information</h1>
+            
+            <!-- Platform Disclaimer -->
+            <div class="legal-section">
+                <h2 data-i18n="legalDisclaimerTitle">Platform Disclaimer</h2>
+                
+                <h3>Medical Information Disclaimer</h3>
+                <p>The information provided on the HAVI platform is for educational and informational purposes only. It is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+                
+                <h3>No Doctor-Patient Relationship</h3>
+                <p>The use of this platform does not create a doctor-patient relationship between you and HAVI or any healthcare professional associated with the platform. The AI-assisted tools and information provided are meant to support, not replace, the relationship between patients and their healthcare providers.</p>
+                
+                <h3>Accuracy of Information</h3>
+                <p>While we strive to provide accurate and up-to-date information, HAVI makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability of the information, products, services, or related graphics contained on the platform.</p>
+                
+                <h3>Third-Party Content</h3>
+                <p>Our platform may display articles and research from third-party sources including PubMed, medical journals, and other scientific databases. HAVI is not responsible for the content, accuracy, or opinions expressed in these third-party materials.</p>
+                
+                <h3>Insurance Products</h3>
+                <p>The insurance products displayed on our platform are provided by third-party insurance companies. HAVI does not endorse or guarantee any specific insurance product. Users should carefully review all policy terms, conditions, and exclusions before making any purchase decisions.</p>
+                
+                <h3>Limitation of Liability</h3>
+                <p>In no event shall HAVI, its directors, employees, partners, agents, suppliers, or affiliates be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses resulting from:</p>
+                <ul>
+                    <li>Your access to or use of or inability to access or use the platform</li>
+                    <li>Any conduct or content of any third party on the platform</li>
+                    <li>Any content obtained from the platform</li>
+                    <li>Unauthorized access, use, or alteration of your transmissions or content</li>
+                </ul>
+            </div>
+            
+            <!-- Privacy Policy -->
+            <div class="legal-section">
+                <h2 data-i18n="legalPrivacyTitle">Privacy Policy</h2>
+                
+                <h3>Information We Collect</h3>
+                <p>We collect information to provide better services to our users. The types of information we collect include:</p>
+                <ul>
+                    <li><strong>Account Information:</strong> When you register, we collect your email address, phone number, and password.</li>
+                    <li><strong>Health Information:</strong> If you choose to use our AI assessment tools, we may collect health-related information you provide.</li>
+                    <li><strong>Usage Data:</strong> We collect information about your interactions with our platform, including pages viewed, search queries, and feature usage.</li>
+                    <li><strong>Device Information:</strong> We collect device-specific information such as your hardware model, operating system, and browser type.</li>
+                </ul>
+                
+                <h3>How We Use Your Information</h3>
+                <p>We use the information we collect to:</p>
+                <ul>
+                    <li>Provide, maintain, and improve our services</li>
+                    <li>Develop new features and services</li>
+                    <li>Personalize your experience and provide relevant content</li>
+                    <li>Communicate with you about updates, security alerts, and support messages</li>
+                    <li>Monitor and analyze trends, usage, and activities</li>
+                    <li>Detect, prevent, and address technical issues and fraudulent activity</li>
+                </ul>
+                
+                <h3>Data Protection</h3>
+                <p>We implement appropriate technical and organizational security measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction. These measures include:</p>
+                <ul>
+                    <li>Encryption of data in transit and at rest</li>
+                    <li>Regular security audits and assessments</li>
+                    <li>Strict access controls and authentication requirements</li>
+                    <li>Employee training on data protection and privacy</li>
+                </ul>
+                
+                <h3>Data Sharing and Disclosure</h3>
+                <p>We do not sell your personal information. We may share your information only in the following circumstances:</p>
+                <ul>
+                    <li><strong>With Your Consent:</strong> We will share your information when you have given us explicit consent to do so.</li>
+                    <li><strong>For Legal Reasons:</strong> We will share information if required by law, regulation, legal process, or governmental request.</li>
+                    <li><strong>With Service Providers:</strong> We may share information with trusted third-party service providers who assist in operating our platform, subject to confidentiality agreements.</li>
+                </ul>
+                
+                <h3>Your Rights</h3>
+                <p>You have the right to:</p>
+                <ul>
+                    <li>Access and receive a copy of your personal data</li>
+                    <li>Correct inaccurate or incomplete personal data</li>
+                    <li>Request deletion of your personal data</li>
+                    <li>Object to or restrict the processing of your personal data</li>
+                    <li>Withdraw consent at any time</li>
+                    <li>Data portability</li>
+                </ul>
+                
+                <h3>Cookies and Tracking Technologies</h3>
+                <p>We use cookies and similar tracking technologies to track activity on our platform and store certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.</p>
+            </div>
+            
+            <!-- Regulatory Compliance -->
+            <div class="legal-section">
+                <h2 data-i18n="legalComplianceTitle">Regulatory Compliance</h2>
+                
+                <h3>HIPAA Compliance (United States)</h3>
+                <p>For users in the United States, HAVI is committed to complying with the Health Insurance Portability and Accountability Act (HIPAA). We implement appropriate administrative, physical, and technical safeguards to protect the privacy and security of protected health information (PHI).</p>
+                
+                <h3>GDPR Compliance (European Union)</h3>
+                <p>For users in the European Union, HAVI complies with the General Data Protection Regulation (GDPR). We process personal data lawfully, fairly, and transparently, and we respect your rights as a data subject under GDPR.</p>
+                
+                <h3>PDPA Compliance (Singapore and Thailand)</h3>
+                <p>For users in Singapore and Thailand, we comply with the respective Personal Data Protection Acts. We obtain consent for data collection and use, and we provide mechanisms for you to access, correct, and withdraw consent for your personal data.</p>
+                
+                <h3>Medical Device Regulations</h3>
+                <p>Our AI-assisted tools are designed to support healthcare decision-making and are not intended to diagnose, treat, cure, or prevent any disease. We do not claim that our platform is a medical device, and it should not be used as a substitute for professional medical advice.</p>
+                
+                <h3>Insurance Regulations</h3>
+                <p>The insurance products displayed on our platform are subject to local insurance regulations. HAVI acts as an information platform only and does not provide insurance brokerage or advisory services. All insurance transactions are conducted directly between users and licensed insurance providers.</p>
+                
+                <h3>Content Licensing</h3>
+                <p>Medical articles and research papers displayed on our platform are sourced from publicly available databases and journals. We comply with all applicable copyright laws and licensing requirements. If you believe any content infringes your copyright, please contact us immediately.</p>
+                
+                <h3>Age Restrictions</h3>
+                <p>Our platform is not intended for use by individuals under the age of 18. We do not knowingly collect personal information from children. If you are a parent or guardian and believe your child has provided us with personal information, please contact us.</p>
+                
+                <h3>International Data Transfers</h3>
+                <p>Your information may be transferred to and maintained on computers located outside of your state, province, country, or other governmental jurisdiction where data protection laws may differ. We ensure appropriate safeguards are in place for such transfers.</p>
+                
+                <h3>Contact Information</h3>
+                <p>If you have any questions about these legal terms, privacy practices, or compliance matters, please contact us at:</p>
+                <ul>
+                    <li><strong>Email:</strong> legal@havi-health.com</li>
+                    <li><strong>Address:</strong> HAVI Health Technologies, Inc.</li>
+                    <li><strong>Privacy Officer:</strong> privacy@havi-health.com</li>
+                </ul>
+            </div>
+            
+            <p class="last-updated">Last Updated: November 21, 2025</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p data-i18n="footerText">&copy; 2025 HAVI. Evidence-based cancer guidance platform.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In / Register - HAVI</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="i18n.js"></script>
+    <style>
+        .auth-page {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+        
+        .auth-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+        }
+        
+        .auth-title {
+            text-align: center;
+            color: #1976d2;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            color: #666;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .auth-tab.active {
+            color: #1976d2;
+            border-bottom-color: #1976d2;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #42a5f5;
+        }
+        
+        .form-toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .form-toggle input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+        
+        .form-toggle label {
+            margin-right: 1.5rem;
+            color: #555;
+            cursor: pointer;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #42a5f5, #1976d2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(66, 165, 245, 0.4);
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+        
+        .toggle-link {
+            color: #42a5f5;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .toggle-link:hover {
+            color: #ec407a;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+            color: #999;
+        }
+        
+        .social-auth {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .social-btn {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .social-btn:hover {
+            border-color: #42a5f5;
+            background: #f5f5f5;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .success-message {
+            background: #4caf50;
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">HAVI</div>
+            <ul class="nav-links">
+                <li><a href="index.html" data-i18n="navHome">Home</a></li>
+                <li><a href="legal.html" data-i18n="navLegal">Legal</a></li>
+                <li><a href="auth.html" class="active" data-i18n="navSignIn">Sign in</a></li>
+                <li>
+                    <select class="language-selector">
+                        <option value="en">English</option>
+                        <option value="zh-CN">简体中文</option>
+                        <option value="zh-TW">繁體中文</option>
+                        <option value="es">Español</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Auth Page -->
+    <section class="auth-page">
+        <div class="auth-container">
+            <h1 class="auth-title" data-i18n="authTitle">Sign In / Register</h1>
+            
+            <div class="success-message" id="successMessage"></div>
+            
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchTab('signin')" data-i18n="authSignIn">Sign In</div>
+                <div class="auth-tab" onclick="switchTab('register')" data-i18n="authRegister">Register</div>
+            </div>
+            
+            <!-- Sign In Form -->
+            <form class="auth-form active" id="signinForm" onsubmit="handleSignIn(event)">
+                <div class="form-group">
+                    <div class="form-toggle">
+                        <input type="radio" id="signin-email" name="signin-method" value="email" checked>
+                        <label for="signin-email" data-i18n="authEmail">Email</label>
+                        <input type="radio" id="signin-phone" name="signin-method" value="phone">
+                        <label for="signin-phone" data-i18n="authPhone">Phone Number</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="authEmail">Email</label>
+                    <input type="email" class="form-input" id="signin-email-input" required>
+                    <div class="error-message" id="signin-email-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="authPassword">Password</label>
+                    <input type="password" class="form-input" id="signin-password" required>
+                    <div class="error-message" id="signin-password-error"></div>
+                </div>
+                
+                <button type="submit" class="submit-btn" data-i18n="authSignInButton">Sign In</button>
+                
+                <div class="form-footer">
+                    <a href="#" class="toggle-link" onclick="switchTab('register'); return false;" data-i18n="authToggleRegister">Don't have an account? Register</a>
+                </div>
+            </form>
+            
+            <!-- Register Form -->
+            <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <div class="form-toggle">
+                        <input type="radio" id="register-email" name="register-method" value="email" checked>
+                        <label for="register-email" data-i18n="authEmail">Email</label>
+                        <input type="radio" id="register-phone" name="register-method" value="phone">
+                        <label for="register-phone" data-i18n="authPhone">Phone Number</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="authEmail">Email</label>
+                    <input type="email" class="form-input" id="register-email-input" required>
+                    <div class="error-message" id="register-email-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="authPassword">Password</label>
+                    <input type="password" class="form-input" id="register-password" required minlength="8">
+                    <div class="error-message" id="register-password-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="authConfirmPassword">Confirm Password</label>
+                    <input type="password" class="form-input" id="register-confirm-password" required>
+                    <div class="error-message" id="register-confirm-error"></div>
+                </div>
+                
+                <button type="submit" class="submit-btn" data-i18n="authRegisterButton">Create Account</button>
+                
+                <div class="form-footer">
+                    <a href="#" class="toggle-link" onclick="switchTab('signin'); return false;" data-i18n="authToggleSignIn">Already have an account? Sign In</a>
+                </div>
+            </form>
+            
+            <div class="divider">
+                <span>OR</span>
+            </div>
+            
+            <!-- Social Authentication -->
+            <div class="social-auth">
+                <button class="social-btn" onclick="handleSocialAuth('google')">
+                    <span>🔍</span> Continue with Google
+                </button>
+                <button class="social-btn" onclick="handleSocialAuth('facebook')">
+                    <span>📘</span> Continue with Facebook
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p data-i18n="footerText">&copy; 2025 HAVI. Evidence-based cancer guidance platform.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Switch between Sign In and Register tabs
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.auth-tab');
+            const forms = document.querySelectorAll('.auth-form');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            forms.forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'signin') {
+                tabs[0].classList.add('active');
+                forms[0].classList.add('active');
+            } else {
+                tabs[1].classList.add('active');
+                forms[1].classList.add('active');
+            }
+        }
+        
+        // Handle Sign In form submission
+        function handleSignIn(event) {
+            event.preventDefault();
+            
+            const method = document.querySelector('input[name="signin-method"]:checked').value;
+            const email = document.getElementById('signin-email-input').value;
+            const password = document.getElementById('signin-password').value;
+            
+            // Simple validation (in real app, this would connect to backend)
+            if (!email || !password) {
+                showError('signin-email-error', 'Please fill in all fields');
+                return;
+            }
+            
+            // Simulate successful login
+            showSuccess('Sign in successful! Redirecting...');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+        
+        // Handle Register form submission
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const method = document.querySelector('input[name="register-method"]:checked').value;
+            const email = document.getElementById('register-email-input').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            // Clear previous errors
+            clearErrors();
+            
+            // Validate password length
+            if (password.length < 8) {
+                showError('register-password-error', 'Password must be at least 8 characters');
+                return;
+            }
+            
+            // Validate password match
+            if (password !== confirmPassword) {
+                showError('register-confirm-error', 'Passwords do not match');
+                return;
+            }
+            
+            // Simulate successful registration
+            showSuccess('Account created successfully! You can now sign in.');
+            setTimeout(() => {
+                switchTab('signin');
+                document.getElementById('signin-email-input').value = email;
+            }, 1500);
+        }
+        
+        // Handle social authentication
+        function handleSocialAuth(provider) {
+            alert(`Social authentication with ${provider} will be implemented in the next phase.\n\nThis will allow you to sign in using your ${provider} account.`);
+        }
+        
+        // Helper functions
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+                el.textContent = '';
+            });
+        }
+        
+        function showSuccess(message) {
+            const successElement = document.getElementById('successMessage');
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+            setTimeout(() => {
+                successElement.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Toggle between email and phone input
+        document.querySelectorAll('input[name="signin-method"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const emailInput = document.getElementById('signin-email-input');
+                const label = emailInput.previousElementSibling;
+                
+                if (e.target.value === 'phone') {
+                    emailInput.type = 'tel';
+                    emailInput.placeholder = '+1 (555) 000-0000';
+                    label.textContent = t('authPhone');
+                } else {
+                    emailInput.type = 'email';
+                    emailInput.placeholder = 'your.email@example.com';
+                    label.textContent = t('authEmail');
+                }
+            });
+        });
+        
+        document.querySelectorAll('input[name="register-method"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const emailInput = document.getElementById('register-email-input');
+                const label = emailInput.previousElementSibling;
+                
+                if (e.target.value === 'phone') {
+                    emailInput.type = 'tel';
+                    emailInput.placeholder = '+1 (555) 000-0000';
+                    label.textContent = t('authPhone');
+                } else {
+                    emailInput.type = 'email';
+                    emailInput.placeholder = 'your.email@example.com';
+                    label.textContent = t('authEmail');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

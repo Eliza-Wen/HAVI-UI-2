@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oncology Related Articles - HAVI</title>
     <link rel="stylesheet" href="style.css">
+    <script src="i18n.js"></script>
     <style>
         .articles-page {
             padding: 2rem 0 4rem;
@@ -102,13 +103,14 @@
         <div class="container">
             <div class="nav-brand">HAVI</div>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="#">Legal</a></li>
-                <li><a href="#">Sign in</a></li>
+                <li><a href="index.html" data-i18n="navHome">Home</a></li>
+                <li><a href="legal.html" data-i18n="navLegal">Legal</a></li>
+                <li><a href="auth.html" data-i18n="navSignIn">Sign in</a></li>
                 <li>
                     <select class="language-selector">
                         <option value="en">English</option>
-                        <option value="zh">中文</option>
+                        <option value="zh-CN">简体中文</option>
+                        <option value="zh-TW">繁體中文</option>
                         <option value="es">Español</option>
                     </select>
                 </li>

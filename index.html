@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HAVI - Evidence-based Cancer Guidance</title>
     <link rel="stylesheet" href="style.css">
+    <script src="i18n.js"></script>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -12,13 +13,14 @@
         <div class="container">
             <div class="nav-brand">HAVI</div>
             <ul class="nav-links">
-                <li><a href="#" class="active">Home</a></li>
-                <li><a href="#">Legal</a></li>
-                <li><a href="#">Sign in</a></li>
+                <li><a href="index.html" class="active" data-i18n="navHome">Home</a></li>
+                <li><a href="legal.html" data-i18n="navLegal">Legal</a></li>
+                <li><a href="auth.html" data-i18n="navSignIn">Sign in</a></li>
                 <li>
                     <select class="language-selector">
                         <option value="en">English</option>
-                        <option value="zh">中文</option>
+                        <option value="zh-CN">简体中文</option>
+                        <option value="zh-TW">繁體中文</option>
                         <option value="es">Español</option>
                     </select>
                 </li>
@@ -29,8 +31,8 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1 class="hero-title">Evidence-based cancer guidance for confident decisions</h1>
-            <p class="hero-subtitle">Personalized guidance, AI-assisted triage, and practical resources for patients and their families.</p>
+            <h1 class="hero-title" data-i18n="heroTitle">Evidence-based cancer guidance for confident decisions</h1>
+            <p class="hero-subtitle" data-i18n="heroSubtitle">Personalized guidance, AI-assisted triage, and practical resources for patients and their families.</p>
         </div>
     </section>
 
@@ -38,8 +40,8 @@
     <section class="search-section">
         <div class="container">
             <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search conditions, symptoms, or treatments" aria-label="Search">
-                <button class="search-btn">Search</button>
+                <input type="text" id="searchInput" data-i18n="searchPlaceholder" placeholder="Search conditions, symptoms, or treatments" aria-label="Search">
+                <button class="search-btn" data-i18n="searchButton">Search</button>
             </div>
         </div>
     </section>
@@ -50,20 +52,20 @@
             <div class="feature-grid">
                 <div class="feature-box">
                     <div class="feature-icon">🏥</div>
-                    <h3>Hospital Access</h3>
-                    <span class="coming-soon">Coming Soon</span>
-                    <p>Connect to hospital appointment system.</p>
+                    <h3 data-i18n="featureHospital">Hospital Access</h3>
+                    <span class="coming-soon" data-i18n="comingSoon">Coming Soon</span>
+                    <p data-i18n="featureHospitalDesc">Connect to hospital appointment system.</p>
                 </div>
                 <div class="feature-box">
                     <div class="feature-icon">🔍</div>
-                    <h3>Search Cancer Information</h3>
-                    <p>Search conditions, symptoms, or treatments.</p>
+                    <h3 data-i18n="featureSearch">Search Cancer Information</h3>
+                    <p data-i18n="featureSearchDesc">Search conditions, symptoms, or treatments.</p>
                 </div>
                 <div class="feature-box">
                     <div class="feature-icon">🤖</div>
-                    <h3>AI-driven Treatment Decision</h3>
-                    <p>Describe your current situation (brief).</p>
-                    <button class="ai-btn">Start AI Assessment</button>
+                    <h3 data-i18n="featureAI">AI-driven Treatment Decision</h3>
+                    <p data-i18n="featureAIDesc">Describe your current situation (brief).</p>
+                    <button class="ai-btn" data-i18n="featureAIButton">Start AI Assessment</button>
                 </div>
             </div>
         </div>
@@ -72,20 +74,82 @@
     <!-- Recommended Articles -->
     <section class="articles">
         <div class="container">
-            <h2 class="section-title">Recommended Articles</h2>
+            <h2 class="section-title" data-i18n="articlesTitle">Recommended Articles</h2>
             <div id="articlesContainer" class="articles-grid">
-                <div class="loading">Loading articles...</div>
+                <div class="loading" data-i18n="loading">Loading articles...</div>
             </div>
             <div class="show-more-container">
-                <a href="articles.html" class="show-more-btn">Show More</a>
+                <a href="articles.html" class="show-more-btn" data-i18n="showMore">Show More</a>
             </div>
         </div>
     </section>
 
+    <!-- Health Insurance Products -->
+    <section class="insurance">
+        <div class="container">
+            <h2 class="section-title" data-i18n="insuranceTitle">Health Insurance Products</h2>
+            <p class="section-subtitle" data-i18n="insuranceSubtitle">Comprehensive coverage for your peace of mind</p>
+            <div class="insurance-grid">
+                <div class="insurance-card">
+                    <div class="insurance-logo">🛡️</div>
+                    <h3>MediCare Plus</h3>
+                    <p class="insurance-type">Critical Illness Insurance</p>
+                    <p class="insurance-desc">Comprehensive coverage for 100+ critical illnesses including all major cancers. Lump sum payout upon diagnosis with no waiting period.</p>
+                    <ul class="insurance-features">
+                        <li>✓ Up to $500,000 coverage</li>
+                        <li>✓ Cancer treatment support</li>
+                        <li>✓ 24/7 medical hotline</li>
+                    </ul>
+                    <button class="insurance-btn" data-i18n="learnMore" onclick="showInsuranceModal('MediCare Plus')">Learn More</button>
+                </div>
+                <div class="insurance-card featured">
+                    <div class="featured-badge">Popular</div>
+                    <div class="insurance-logo">💙</div>
+                    <h3>HealthGuard Premium</h3>
+                    <p class="insurance-type">Medical & Critical Illness</p>
+                    <p class="insurance-desc">All-in-one protection combining hospitalization, surgery, and critical illness coverage with cancer-specific benefits and second opinion services.</p>
+                    <ul class="insurance-features">
+                        <li>✓ Unlimited annual coverage</li>
+                        <li>✓ Cancer specialist access</li>
+                        <li>✓ Global treatment coverage</li>
+                    </ul>
+                    <button class="insurance-btn" data-i18n="learnMore" onclick="showInsuranceModal('HealthGuard Premium')">Learn More</button>
+                </div>
+                <div class="insurance-card">
+                    <div class="insurance-logo">🏥</div>
+                    <h3>CancerCare Shield</h3>
+                    <p class="insurance-type">Specialized Cancer Insurance</p>
+                    <p class="insurance-desc">Dedicated cancer insurance with coverage for diagnosis, treatment, and recovery. Includes immunotherapy and targeted therapy treatments.</p>
+                    <ul class="insurance-features">
+                        <li>✓ Cancer-specific coverage</li>
+                        <li>✓ Experimental treatments</li>
+                        <li>✓ Rehabilitation support</li>
+                    </ul>
+                    <button class="insurance-btn" data-i18n="learnMore" onclick="showInsuranceModal('CancerCare Shield')">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Insurance Modal -->
+    <div id="insuranceModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeInsuranceModal()">&times;</span>
+            <h2 id="modalTitle">Insurance Details</h2>
+            <div id="modalBody">
+                <p>Loading insurance details...</p>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn primary">Request Quote</button>
+                <button class="modal-btn secondary" onclick="closeInsuranceModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 HAVI. Evidence-based cancer guidance platform.</p>
+            <p data-i18n="footerText">&copy; 2025 HAVI. Evidence-based cancer guidance platform.</p>
         </div>
     </footer>
 
