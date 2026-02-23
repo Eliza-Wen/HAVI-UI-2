@@ -22,33 +22,78 @@
             --white: #FFFFFF;
         }
 
-        /* AI Assessment Section Styles */
-        .ai-assessment {
-            padding: 3rem 0;
-            background: var(--blue-light);
+        /* AI Assessment Hero Section */
+        .ai-assessment-hero {
+            width: 100%;
+            background: linear-gradient(135deg, #EAF4FB 0%, #FDF0F0 100%);
+            padding: 60px 20px;
         }
 
-        .ai-assessment .container {
-            max-width: 1200px;
+        .hero-header {
+            text-align: center;
+            max-width: 960px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-label {
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: var(--blue);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0 0 12px 0;
+        }
+
+        .hero-heading {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+        }
+
+        .hero-subheading {
+            font-size: 16px;
+            color: #666;
+            margin: 0;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .assessment-card-wrapper {
+            max-width: 960px;
             margin: 0 auto;
-            padding: 0 20px;
         }
 
         .assessment-card {
             background: var(--white);
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-            border-top: 4px solid var(--blue);
-            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(168, 216, 234, 0.3);
+            padding: 40px 48px;
             display: grid;
             grid-template-columns: 60% 40%;
             gap: 2rem;
             align-items: center;
+            position: relative;
+            border-top: 4px solid;
+            border-image: linear-gradient(90deg, #A8D8EA, #F4C2C2) 1;
         }
 
         @media (max-width: 768px) {
             .assessment-card {
                 grid-template-columns: 1fr;
+                padding: 24px;
+                gap: 1.5rem;
+            }
+
+            .hero-heading {
+                font-size: 24px;
+            }
+
+            .hero-subheading {
+                font-size: 14px;
             }
         }
 
@@ -197,6 +242,84 @@
             height: auto;
         }
 
+        .error-alert {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        /* Two Column Feature Cards Section */
+        .features-two {
+            padding: 40px 20px;
+        }
+
+        .features-two .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .feature-grid-two {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .feature-grid-two {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+
+        .feature-box-small {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 28px 32px;
+            border-top: 3px solid var(--blue);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .feature-box-small:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-box-small .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-box-small h3 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .feature-box-small p {
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .coming-soon {
+            display: inline-block;
+            background: #ffc107;
+            color: #fff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
         /* Loading State */
         .loading-state {
             text-align: center;
@@ -242,8 +365,8 @@
 
         /* Report Display */
         .report-container {
-            max-width: 760px;
-            margin: 3rem auto;
+            max-width: 960px;
+            margin: 3rem auto 0;
             background: var(--white);
             border-radius: 16px;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
@@ -478,8 +601,16 @@
     </nav>
 
     <!-- AI Assessment Hero Section -->
-    <section class="ai-assessment">
-        <div class="container">
+    <section class="ai-assessment-hero">
+        <!-- Hero Label and Heading -->
+        <div class="hero-header">
+            <p class="hero-label">AI CANCER ANALYSIS</p>
+            <h1 class="hero-heading">Evidence-based cancer guidance for confident decisions</h1>
+            <p class="hero-subheading">Personalized guidance, AI-assisted triage, and practical resources for patients and their families.</p>
+        </div>
+
+        <!-- Assessment Card -->
+        <div class="assessment-card-wrapper">
             <div class="assessment-card">
                 <!-- Left Column: Form -->
                 <div class="assessment-form">
@@ -576,8 +707,8 @@
         </div>
     </section>
 
-    <!-- Search Bar -->
-    <section class="search-section">
+    <!-- Search Bar (Hidden) -->
+    <section class="search-section" style="display: none;">
         <div class="container">
             <div class="search-bar">
                 <input type="text" id="searchInput" data-i18n="searchPlaceholder" placeholder="Search conditions, symptoms, or treatments" aria-label="Search">
@@ -586,26 +717,20 @@
         </div>
     </section>
 
-    <!-- Feature Boxes -->
-    <section class="features">
+    <!-- Feature Cards (Two Column) -->
+    <section class="features-two">
         <div class="container">
-            <div class="feature-grid">
-                <div class="feature-box">
+            <div class="feature-grid-two">
+                <div class="feature-box-small">
                     <div class="feature-icon">🏥</div>
                     <h3 data-i18n="featureHospital">Hospital Access</h3>
                     <span class="coming-soon" data-i18n="comingSoon">Coming Soon</span>
                     <p data-i18n="featureHospitalDesc">Connect to hospital appointment system.</p>
                 </div>
-                <div class="feature-box">
+                <div class="feature-box-small">
                     <div class="feature-icon">🔍</div>
                     <h3 data-i18n="featureSearch">Search Cancer Information</h3>
                     <p data-i18n="featureSearchDesc">Search conditions, symptoms, or treatments.</p>
-                </div>
-                <div class="feature-box">
-                    <div class="feature-icon">🤖</div>
-                    <h3 data-i18n="featureAI">AI-driven Treatment Decision</h3>
-                    <p data-i18n="featureAIDesc">Describe your current situation (brief).</p>
-                    <button class="ai-btn" data-i18n="featureAIButton">Start AI Assessment</button>
                 </div>
             </div>
         </div>
