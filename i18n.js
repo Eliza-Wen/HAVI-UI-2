@@ -37,6 +37,17 @@ const translations = {
         // Footer
         footerText: "© 2025 HAVI. Evidence-based cancer guidance platform.",
         
+        // AI Assessment Card
+        aiCardLabel: "AI CANCER ANALYSIS",
+        aiCardHeading: "Evidence-based cancer guidance for confident decisions",
+        aiCardSubheading: "Personalized guidance, AI-assisted triage, and practical resources for patients and their families.",
+        aiCardFileLabel: "📁 Medical Documents",
+        aiCardFileText: "Drag & drop files here, or click to browse",
+        aiCardFileSubtext: "Supports PDF, JPG, PNG, Word (.docx)",
+        aiCardQuestionLabel: "Your question (optional)",
+        aiCardQuestionPlaceholder: "e.g. What are my treatment options based on this report?",
+        aiCardSubmitButton: "✨ Generate AI Report",
+        
         // Auth Page
         authTitle: "Sign In / Register",
         authSignIn: "Sign In",
@@ -93,6 +104,17 @@ const translations = {
         
         // Footer
         footerText: "© 2025 HAVI. 循证癌症指导平台。",
+        
+        // AI Assessment Card
+        aiCardLabel: "AI癌症分析",
+        aiCardHeading: "循证癌症指导，助您自信决策",
+        aiCardSubheading: "为患者及其家属提供个性化指导、AI辅助分诊和实用资源。",
+        aiCardFileLabel: "📁 医疗文件",
+        aiCardFileText: "拖放文件到此处，或点击浏览",
+        aiCardFileSubtext: "支持 PDF、JPG、PNG、Word (.docx)",
+        aiCardQuestionLabel: "您的问题（可选）",
+        aiCardQuestionPlaceholder: "例如：根据这份报告，我有哪些治疗选择？",
+        aiCardSubmitButton: "✨ 生成AI报告",
         
         // Auth Page
         authTitle: "登录 / 注册",
@@ -151,6 +173,17 @@ const translations = {
         // Footer
         footerText: "© 2025 HAVI. 循證癌症指導平台。",
         
+        // AI Assessment Card
+        aiCardLabel: "AI癌症分析",
+        aiCardHeading: "循證癌症指導，助您自信決策",
+        aiCardSubheading: "為患者及其家屬提供個性化指導、AI輔助分診和實用資源。",
+        aiCardFileLabel: "📁 醫療文件",
+        aiCardFileText: "拖放文件到此處，或點擊瀏覽",
+        aiCardFileSubtext: "支援 PDF、JPG、PNG、Word (.docx)",
+        aiCardQuestionLabel: "您的問題（可選）",
+        aiCardQuestionPlaceholder: "例如：根據這份報告，我有哪些治療選擇？",
+        aiCardSubmitButton: "✨ 生成AI報告",
+        
         // Auth Page
         authTitle: "登入 / 註冊",
         authSignIn: "登入",
@@ -208,6 +241,17 @@ const translations = {
         // Footer
         footerText: "© 2025 HAVI. Plataforma de orientación oncológica basada en evidencia.",
         
+        // AI Assessment Card
+        aiCardLabel: "ANÁLISIS DE CÁNCER CON IA",
+        aiCardHeading: "Orientación oncológica basada en evidencia para decisiones seguras",
+        aiCardSubheading: "Orientación personalizada, triaje asistido por IA y recursos prácticos para pacientes y sus familias.",
+        aiCardFileLabel: "📁 Documentos Médicos",
+        aiCardFileText: "Arrastra y suelta archivos aquí, o haz clic para buscar",
+        aiCardFileSubtext: "Admite PDF, JPG, PNG, Word (.docx)",
+        aiCardQuestionLabel: "Tu pregunta (opcional)",
+        aiCardQuestionPlaceholder: "ej. ¿Cuáles son mis opciones de tratamiento según este informe?",
+        aiCardSubmitButton: "✨ Generar Informe IA",
+        
         // Auth Page
         authTitle: "Iniciar Sesión / Registrarse",
         authSignIn: "Iniciar Sesión",
@@ -261,6 +305,48 @@ function updatePageContent() {
     if (languageSelector) {
         languageSelector.value = currentLanguage;
     }
+    
+    // Update AI Assessment Card
+    updateAICardLanguage();
+}
+
+// Function to update AI Assessment Card language
+function updateAICardLanguage() {
+    // Hero label
+    const heroLabel = document.querySelector('.hero-label');
+    if (heroLabel) heroLabel.textContent = t('aiCardLabel');
+    
+    // Hero heading
+    const heroHeading = document.querySelector('.hero-heading');
+    if (heroHeading) heroHeading.textContent = t('aiCardHeading');
+    
+    // Hero subheading
+    const heroSubheading = document.querySelector('.hero-subheading');
+    if (heroSubheading) heroSubheading.textContent = t('aiCardSubheading');
+    
+    // File input label
+    const fileLabel = document.querySelector('label[for="fileInput"]');
+    if (fileLabel) fileLabel.textContent = t('aiCardFileLabel');
+    
+    // Upload zone text
+    const uploadText = document.querySelector('.upload-zone-text');
+    if (uploadText) uploadText.textContent = t('aiCardFileText');
+    
+    // Upload zone subtext
+    const uploadSubtext = document.querySelector('.upload-zone-subtext');
+    if (uploadSubtext) uploadSubtext.textContent = t('aiCardFileSubtext');
+    
+    // Question label
+    const questionLabel = document.querySelector('label[for="questionInput"]');
+    if (questionLabel) questionLabel.textContent = t('aiCardQuestionLabel');
+    
+    // Question placeholder
+    const questionInput = document.getElementById('questionInput');
+    if (questionInput) questionInput.placeholder = t('aiCardQuestionPlaceholder');
+    
+    // Submit button
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn && !submitBtn.disabled) submitBtn.textContent = t('aiCardSubmitButton');
 }
 
 // Initialize language on page load

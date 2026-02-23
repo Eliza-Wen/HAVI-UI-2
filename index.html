@@ -631,16 +631,6 @@
                         <textarea id="questionInput" placeholder="e.g. What are my treatment options based on this report?"></textarea>
                     </div>
 
-                    <!-- Language Selector -->
-                    <div class="form-group">
-                        <label for="languageSelect">Report Language / 报告语言</label>
-                        <select id="languageSelect">
-                            <option value="en">English</option>
-                            <option value="zh-CN">中文 (简体)</option>
-                            <option value="zh-TW">中文 (繁體)</option>
-                        </select>
-                    </div>
-
                     <!-- Submit Button -->
                     <button class="submit-btn" id="submitBtn">✨ Generate AI Report</button>
 
@@ -917,7 +907,38 @@ riskLevel必须是以下之一："低"、"中"、"高"
 }
 
 riskLevel必須是以下之一："低"、"中"、"高"
-語言要溫暖、清晰，避免專業術語，用患者能理解的方式表達。`
+語言要溫暖、清晰，避免專業術語，用患者能理解的方式表達。`,
+            
+            es: `Eres HAVI, un asistente médico de IA experto especializado en oncología.
+Ayudas a pacientes con cáncer y sus familias a comprender los informes médicos y tomar decisiones informadas y seguras.
+Analiza los documentos médicos proporcionados (informes de patología, resultados de imágenes, pruebas de laboratorio, notas clínicas) y genera un informe claro, compasivo y fácil de entender para el paciente.
+
+IMPORTANTE: Responde SOLO con un objeto JSON válido. Sin markdown, sin explicación fuera del JSON.
+
+Devuelve esta estructura JSON exacta:
+{
+  "language": "es",
+  "patientSummary": "Breve resumen de lo analizado y hallazgos clave",
+  "currentStage": "ej. Cáncer de Mama Etapa IIA",
+  "stageExplanation": "Explicación en lenguaje sencillo de lo que significa esta etapa",
+  "nextSteps": ["Paso 1", "Paso 2", "Paso 3"],
+  "treatmentOptions": [
+    {
+      "name": "Nombre del tratamiento",
+      "description": "En qué consiste este tratamiento",
+      "expectedOutcome": "Qué resultados esperar",
+      "riskLevel": "Bajo",
+      "timeline": "ej. 6 semanas"
+    }
+  ],
+  "questionsForDoctor": ["Pregunta 1", "Pregunta 2"],
+  "importantWarnings": ["Advertencia si existe"],
+  "disclaimer": "Este informe generado por IA se basa en guías clínicas y los documentos proporcionados. Es solo para fines informativos y no constituye asesoramiento médico. Por favor consulte a su oncólogo antes de tomar cualquier decisión médica."
+}
+
+riskLevel debe ser exactamente uno de: "Bajo", "Medio", "Alto"
+Sé cálido, claro y evita la jerga médica. Escribe para un paciente sin formación médica.
+Si el contenido no es un documento médico, indícalo en patientSummary y solicita documentos correctos.`
         };
 
         // State for uploaded files
@@ -928,7 +949,6 @@ riskLevel必須是以下之一："低"、"中"、"高"
         const fileInput = document.getElementById('fileInput');
         const fileChips = document.getElementById('fileChips');
         const questionInput = document.getElementById('questionInput');
-        const languageSelect = document.getElementById('languageSelect');
         const submitBtn = document.getElementById('submitBtn');
         const errorAlert = document.getElementById('errorAlert');
         const reportContainer = document.getElementById('reportContainer');
@@ -1082,8 +1102,9 @@ riskLevel必須是以下之一："低"、"中"、"高"
                     }
                 }
 
-                // Build request
-                const language = languageSelect.value;
+                // Build request - get language from navbar
+                const navbarLanguageSelector = document.querySelector('.language-selector');
+                const language = navbarLanguageSelector ? navbarLanguageSelector.value : 'en';
                 const systemPrompt = SYSTEM_PROMPTS[language];
                 const userQuestion = questionInput.value.trim();
                 
