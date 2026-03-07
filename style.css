@@ -57,7 +57,10 @@ body {
 .nav-brand {
     font-size: 1.8rem;
     font-weight: 700;
-    color: var(--blue);
+    background: linear-gradient(90deg, var(--blue) 0%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .nav-links {
@@ -1135,6 +1138,10 @@ body {
 
     .nav-brand {
         font-size: 1.3rem;
+        background: linear-gradient(90deg, var(--blue) 0%, var(--pink) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     .nav-links {
