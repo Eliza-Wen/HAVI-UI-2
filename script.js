@@ -278,46 +278,113 @@ window.sendStarterMessage = function(btn) {
 
 window.shareWithDoctor = function() {
     if (!window._lastReport) {
-        alert('No report to share yet. Please generate a report first.');
+        alert('No report yet. Please generate a report first.');
         return;
     }
-    const panel = document.getElementById('shareLinkPanel');
-    const input = document.getElementById('shareLinkInput');
-    if (!panel || !input) return;
+    // Reset state each time modal opens
+    var qrArea = document.getElementById('qrArea');
+    var qrContainer = document.getElementById('qrCodeContainer');
+    if (qrArea) qrArea.style.display = 'none';
+    if (qrContainer) qrContainer.innerHTML = '';
+    var pill = document.getElementById('btnCopyLink');
+    if (pill) { pill.textContent = 'Copy'; pill.style.background = ''; pill.style.color = ''; }
+    var modal = document.getElementById('shareModal');
+    if (modal) modal.style.display = 'flex';
+};
 
-    // Encode the full report JSON into the URL so the recipient sees the report when they open the link
+window.closeShareModal = function() {
+    var modal = document.getElementById('shareModal');
+    if (modal) modal.style.display = 'none';
+};
+
+function getShareUrl() {
     try {
-        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(window._lastReport))));
-        const base = window.location.origin + window.location.pathname;
-        input.value = base + '?report=' + encoded;
+        var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(window._lastReport))));
+        return window.location.origin + window.location.pathname + '?report=' + encoded;
     } catch(e) {
-        input.value = window.location.href;
+        return window.location.href;
     }
+}
 
-    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-    if (panel.style.display === 'block') {
-        input.select();
-        input.setSelectionRange(0, 99999);
+function showToast(msg) {
+    var toast = document.getElementById('shareToast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    toast.style.opacity = '1';
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function() {
+        toast.style.opacity = '0';
+        setTimeout(function() { toast.style.display = 'none'; }, 400);
+    }, 2500);
+}
+
+function fallbackCopy(text) {
+    var el = document.createElement('textarea');
+    el.value = text;
+    el.style.cssText = 'position:fixed;left:-9999px;top:0;';
+    document.body.appendChild(el);
+    el.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(el);
+}
+
+window.shareCopyLink = function() {
+    var url = getShareUrl();
+    var pill = document.getElementById('btnCopyLink');
+    function onCopied() {
+        showToast('\u2713 Link copied to clipboard!');
+        if (pill) {
+            pill.textContent = '\u2713 Copied!';
+            pill.style.background = '#16a34a';
+            pill.style.color = '#fff';
+            setTimeout(function() {
+                pill.textContent = 'Copy';
+                pill.style.background = '';
+                pill.style.color = '';
+            }, 2000);
+        }
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(onCopied).catch(function() { fallbackCopy(url); onCopied(); });
+    } else {
+        fallbackCopy(url); onCopied();
     }
 };
 
-window.copyShareLink = function() {
-    const input = document.getElementById('shareLinkInput');
-    if (!input) return;
-    input.select();
-    input.setSelectionRange(0, 99999);
-    let copied = false;
-    try {
-        copied = document.execCommand('copy');
-    } catch(e) {}
-    if (!copied && navigator.clipboard) {
-        navigator.clipboard.writeText(input.value).catch(() => {});
-        copied = true;
+window.shareQRCode = function() {
+    var url = getShareUrl();
+    var qrArea = document.getElementById('qrArea');
+    var qrContainer = document.getElementById('qrCodeContainer');
+    if (!qrArea || !qrContainer) return;
+    qrContainer.innerHTML = '';
+    qrArea.style.display = 'block';
+    if (typeof QRCode !== 'undefined') {
+        new QRCode(qrContainer, {
+            text: url,
+            width: 180,
+            height: 180,
+            colorDark: '#1a1a2e',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.M
+        });
+    } else {
+        qrContainer.innerHTML = '<p style="color:#6b7280;font-size:13px;">QR library loading\u2026 please try again in a moment.</p>';
     }
-    const btn = document.getElementById('copyShareBtn');
-    if (btn) {
-        btn.textContent = '✓ Copied!';
-        setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+};
+
+window.shareViaApp = function() {
+    var url = getShareUrl();
+    if (navigator.share) {
+        navigator.share({
+            title: 'HAVI AI Cancer Analysis Report',
+            text: 'My personalized cancer analysis report from HAVI',
+            url: url
+        }).catch(function() {});
+    } else {
+        var subject = encodeURIComponent('HAVI Cancer Analysis Report');
+        var body = encodeURIComponent('Please find my AI cancer analysis report at the link below.\n\nView report: ' + url + '\n\nGenerated by HAVI \u2014 havi-ui-2.vercel.app');
+        window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
     }
 };
 
