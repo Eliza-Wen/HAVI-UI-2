@@ -829,14 +829,23 @@ function renderAnalysisReport(report) {
     if (emptyState) emptyState.style.display = 'none';
     if (previewCard) previewCard.style.display = 'block';
 
-    // Switch to the Download Report tab
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-    const reportTabBtn = document.querySelector('.tab-btn[data-tab="report"]');
-    const reportTabContent = document.getElementById('report-tab');
-    if (reportTabBtn) reportTabBtn.classList.add('active');
-    if (reportTabContent) reportTabContent.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // After 300ms: switch to Download Report tab, pulse it, scroll to section
+    setTimeout(function() {
+        document.querySelectorAll('.tab-btn').forEach(function(btn) { btn.classList.remove('active'); });
+        document.querySelectorAll('.tab-content').forEach(function(tab) { tab.classList.remove('active'); });
+        const reportTabBtn = document.querySelector('.tab-btn[data-tab="report"]');
+        const reportTabContent = document.getElementById('report-tab');
+        if (reportTabBtn) {
+            reportTabBtn.classList.add('active');
+            // Pulse highlight animation
+            reportTabBtn.classList.add('tab-pulse');
+            setTimeout(function() { reportTabBtn.classList.remove('tab-pulse'); }, 900);
+        }
+        if (reportTabContent) reportTabContent.classList.add('active');
+        // Smooth scroll to the upload/analysis section
+        const section = document.getElementById('uploadSection');
+        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
 }
 
 function getRiskClass(level) {

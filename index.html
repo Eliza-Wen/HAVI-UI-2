@@ -11,6 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -215,16 +216,7 @@
                         </div>
                         <div class="report-preview-actions">
                             <button class="btn-download-report" onclick="downloadReportPDF()">⬇ Download PDF Report</button>
-                            <button class="btn-share-report" onclick="shareWithDoctor()">Share with Doctor</button>
-                        </div>
-                        <!-- Share link panel — shown when Share is clicked -->
-                        <div id="shareLinkPanel" class="share-link-panel" style="display:none;">
-                            <p class="share-link-label">📎 This link contains your full report — anyone with it can view your analysis:</p>
-                            <div class="share-link-row">
-                                <input type="text" id="shareLinkInput" class="share-link-input" readonly />
-                                <button id="copyShareBtn" class="btn-copy-link" onclick="copyShareLink()">Copy</button>
-                            </div>
-                            <p class="share-link-hint">Send this link to your doctor, family member, or care team. No account needed to view.</p>
+                            <button class="btn-share-report" onclick="shareWithDoctor()">Share</button>
                         </div>
                     </div>
                     <!-- Hidden full report for PDF export -->
@@ -338,6 +330,53 @@
             <div id="modalBody"></div>
         </div>
     </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="share-modal-overlay" style="display:none;" onclick="if(event.target===this)closeShareModal()">
+        <div class="share-modal">
+            <div class="share-modal-header">
+                <div>
+                    <div class="share-modal-title">Share Your Report</div>
+                    <div class="share-modal-subtitle">Choose how to share with your doctor</div>
+                </div>
+                <button class="share-modal-close" onclick="closeShareModal()">&#215;</button>
+            </div>
+            <div class="share-options">
+                <!-- Option 1: Copy Link -->
+                <div class="share-option-card" onclick="shareCopyLink()">
+                    <div class="share-option-icon">🔗</div>
+                    <div class="share-option-text">
+                        <div class="share-option-title">Copy Download Link</div>
+                        <div class="share-option-desc">Share a link — anyone with it can view your full report</div>
+                    </div>
+                    <span id="btnCopyLink" class="share-option-pill">Copy</span>
+                </div>
+                <!-- Option 2: QR Code -->
+                <div class="share-option-card" onclick="shareQRCode()">
+                    <div class="share-option-icon">&#9638;</div>
+                    <div class="share-option-text">
+                        <div class="share-option-title">Generate QR Code</div>
+                        <div class="share-option-desc">Doctor scans QR code to view the report instantly</div>
+                    </div>
+                </div>
+                <div id="qrArea" class="qr-area" style="display:none;">
+                    <div id="qrCodeContainer" class="qr-code-container"></div>
+                    <p class="qr-instruction">Ask your doctor to scan this QR code</p>
+                </div>
+                <!-- Option 3: Share via App -->
+                <div class="share-option-card" onclick="shareViaApp()">
+                    <div class="share-option-icon">&#8599;</div>
+                    <div class="share-option-text">
+                        <div class="share-option-title">Share via App</div>
+                        <div class="share-option-desc">WeChat, WhatsApp, Email and more</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="shareToast" class="share-toast" style="display:none;"></div>
 
     <script src="script.js"></script>
     <script>

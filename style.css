@@ -1665,6 +1665,205 @@ body {
 }
 
 /* ============================================
+   TAB PULSE ANIMATION
+   ============================================ */
+
+@keyframes tabPulse {
+    0%   { background: transparent; }
+    30%  { background: #EAF4FB; box-shadow: 0 0 0 3px rgba(168,216,234,0.35); }
+    70%  { background: #EAF4FB; box-shadow: 0 0 0 3px rgba(168,216,234,0.35); }
+    100% { background: transparent; box-shadow: none; }
+}
+
+.tab-pulse {
+    animation: tabPulse 0.9s ease;
+}
+
+/* ============================================
+   SHARE MODAL
+   ============================================ */
+
+.share-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.share-modal {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 48px rgba(0, 0, 0, 0.12);
+    padding: 32px;
+    width: 100%;
+    max-width: 460px;
+    position: relative;
+}
+
+.share-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 12px;
+}
+
+.share-modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.share-modal-subtitle {
+    font-size: 14px;
+    color: #6B7280;
+    font-weight: 400;
+}
+
+.share-modal-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #9CA3AF;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: color 0.15s;
+}
+
+.share-modal-close:hover {
+    color: var(--text-dark);
+}
+
+.share-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.share-option-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: white;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: border-color 0.18s, background 0.18s;
+    position: relative;
+}
+
+.share-option-card:hover {
+    border-color: var(--blue);
+    background: #F8FBFD;
+}
+
+.share-option-card:active {
+    background: linear-gradient(135deg, #EAF4FB, #FDF0F3);
+    border-color: var(--blue);
+}
+
+.share-option-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    background: #EAF4FB;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--blue);
+    flex-shrink: 0;
+}
+
+.share-option-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.share-option-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+}
+
+.share-option-desc {
+    font-size: 13px;
+    color: #6B7280;
+    line-height: 1.4;
+}
+
+.share-option-pill {
+    display: inline-block;
+    background: var(--blue-light);
+    color: var(--text-dark);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
+    pointer-events: none;
+}
+
+/* QR code area */
+.qr-area {
+    background: #f9fafb;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+}
+
+.qr-code-container {
+    display: inline-block;
+    margin-bottom: 12px;
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.qr-code-container img,
+.qr-code-container canvas {
+    display: block;
+}
+
+.qr-instruction {
+    font-size: 13px;
+    color: #6B7280;
+    margin-top: 4px;
+}
+
+/* Toast notification */
+.share-toast {
+    position: fixed;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a2e;
+    color: #fff;
+    padding: 11px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10000;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    transition: opacity 0.35s;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* ============================================
    CHAT — STARTER CHIPS & SEND BUTTON
    ============================================ */
 
