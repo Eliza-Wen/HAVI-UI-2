@@ -243,7 +243,7 @@ function setupChatInterface() {
     }
 }
 
-window.sendMessage = function() {
+window.sendMessage = async function() {
     const chatInput = document.getElementById('chatInput');
     const chatMessages = document.getElementById('chatMessages');
     
@@ -259,16 +259,68 @@ window.sendMessage = function() {
     chatMessages.appendChild(userDiv);
     
     chatInput.value = '';
+    chatInput.disabled = true;
     chatMessages.scrollTop = chatMessages.scrollHeight;
     
-    // Simulate bot response
-    setTimeout(() => {
+    // Add loading indicator
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'message bot-message';
+    loadingDiv.id = 'loading-message';
+    loadingDiv.innerHTML = `<p>⏳ Thinking...</p>`;
+    chatMessages.appendChild(loadingDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    try {
+        // Get language
+        const langSelector = document.querySelector('.language-selector');
+        const language = langSelector ? langSelector.value : 'en';
+        
+        // Build chat prompt
+        const systemPrompt = `You are HAVI, an AI cancer guidance assistant. Provide helpful, evidence-based information about cancer treatment, diagnosis, and clinical guidelines. Be compassionate, clear, and informative. Always remind users to consult with their healthcare providers for medical decisions. Language: ${language}`;
+        
+        const parts = [
+            { text: systemPrompt },
+            { text: `\n\nUser Question: ${message}` }
+        ];
+        
+        // Call API
+        const response = await fetch('/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ parts })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'API request failed');
+        }
+        
+        const data = await response.json();
+        const aiResponse = data.candidates[0].content.parts[0].text;
+        
+        // Remove loading indicator
+        loadingDiv.remove();
+        
+        // Add AI response
         const botDiv = document.createElement('div');
         botDiv.className = 'message bot-message';
-        botDiv.innerHTML = `<p>Thank you for your question. In production, this will connect to our AI system for personalized responses about cancer treatment and guidance.</p>`;
+        botDiv.innerHTML = `<p>${escapeHtml(aiResponse)}</p>`;
         chatMessages.appendChild(botDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-    }, 500);
+        
+    } catch (error) {
+        console.error('Chat error:', error);
+        loadingDiv.remove();
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'message bot-message';
+        errorDiv.innerHTML = `<p>❌ Sorry, I encountered an error. Please try again.</p>`;
+        chatMessages.appendChild(errorDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    } finally {
+        chatInput.disabled = false;
+        chatInput.focus();
+    }
 };
 
 // ============================================
