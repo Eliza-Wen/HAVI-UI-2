@@ -808,8 +808,8 @@ function getRiskClass(level) {
 }
 
 window.downloadReportPDF = function() {
-    const element = document.getElementById('reportContainer');
-    if (!element || !element.innerHTML.trim()) {
+    const source = document.getElementById('reportContainer');
+    if (!source || !source.innerHTML.trim()) {
         alert('No report to download. Please generate a report first.');
         return;
     }
@@ -818,27 +818,42 @@ window.downloadReportPDF = function() {
         return;
     }
 
-    // html2canvas cannot capture off-screen elements.
-    // Temporarily move the container to top-left (behind page content) so it renders correctly.
-    const origStyle = element.getAttribute('style') || '';
-    element.setAttribute('style', 'position:fixed;left:0;top:0;width:800px;background:white;z-index:-1;');
+    // html2canvas cannot capture elements at left:-9999px (off-screen / behind stacking context).
+    // Solution: clone the report node, place it in normal document flow at the end of <body>
+    // (html2canvas will capture it correctly), then remove it after the PDF is saved.
+    const clone = source.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.style.cssText = [
+        'position:relative',
+        'width:794px',
+        'max-width:794px',
+        'background:#ffffff',
+        'padding:24px',
+        'margin:0 auto',
+        'font-family:Inter,sans-serif',
+        'font-size:14px',
+        'color:#1a1a2e',
+        'box-sizing:border-box'
+    ].join(';');
+    document.body.appendChild(clone);
 
     const opt = {
-        margin: [15, 15, 15, 15],
+        margin: [12, 12, 12, 12],
         filename: 'HAVI_Report_' + new Date().toISOString().split('T')[0] + '.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, allowTaint: true, scrollX: 0, scrollY: 0 },
+        html2canvas: { scale: 2, useCORS: true, allowTaint: true, logging: false },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    html2pdf().set(opt).from(element).save().then(function() {
-        // Restore off-screen positioning after PDF is saved
-        element.setAttribute('style', origStyle);
-    }).catch(function(err) {
-        element.setAttribute('style', origStyle);
-        console.error('PDF generation error:', err);
-        alert('PDF generation failed. Please try again.');
-    });
+    html2pdf().set(opt).from(clone).save()
+        .then(function() {
+            document.body.removeChild(clone);
+        })
+        .catch(function(err) {
+            if (document.body.contains(clone)) document.body.removeChild(clone);
+            console.error('PDF generation error:', err);
+            alert('PDF generation failed. Please try again.');
+        });
 };
 
 // ============================================
