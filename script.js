@@ -689,6 +689,9 @@ riskLevel必須是以下之一："低"、"中"、"高"
 
 // Render analysis report — populates the Download Report tab preview card
 function renderAnalysisReport(report) {
+    // Store globally so downloadReportPDF can access it
+    window._lastReport = report;
+
     const now = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     // --- Populate hidden full-report container for PDF export ---
@@ -808,64 +811,146 @@ function getRiskClass(level) {
 }
 
 window.downloadReportPDF = function() {
-    const source = document.getElementById('reportContainer');
-    if (!source || !source.innerHTML.trim()) {
+    if (!window._lastReport) {
         alert('No report to download. Please generate a report first.');
         return;
     }
-    if (typeof html2pdf === 'undefined') {
-        alert('PDF library not loaded');
-        return;
+    var r = window._lastReport;
+
+    function eh(s) {
+        return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function riskColor(level) {
+        var l = String(level||'').toLowerCase();
+        if (l==='low'||l==='低') return '#16a34a';
+        if (l==='high'||l==='高'||l==='alto') return '#dc2626';
+        return '#d97706';
+    }
+    function riskBg(level) {
+        var l = String(level||'').toLowerCase();
+        if (l==='low'||l==='低') return '#f0fdf4';
+        if (l==='high'||l==='高'||l==='alto') return '#fef2f2';
+        return '#fffbeb';
     }
 
-    // html2canvas captures the FULL document and crops to the element's bounding rect.
-    // If the element is far down the page (left:-9999px or appended at bottom of body),
-    // the crop starts with a huge blank area before the content.
-    // Fix: use position:fixed top:0 left:0 so bounding rect starts at (0,0).
-    // opacity:0.01 keeps it invisible to the user but html2canvas can still capture it.
-    const clone = source.cloneNode(true);
-    clone.removeAttribute('id');
-    clone.style.cssText = [
-        'position:fixed',
-        'top:0',
-        'left:0',
-        'width:794px',
-        'background:#ffffff',
-        'padding:32px 40px',
-        'font-family:Inter,Arial,sans-serif',
-        'font-size:14px',
-        'color:#1a1a2e',
-        'box-sizing:border-box',
-        'z-index:999999',
-        'opacity:0.01',
-        'pointer-events:none'
-    ].join(';');
-    document.body.appendChild(clone);
+    var now = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    var date = 'Generated on ' + now;
 
-    const opt = {
-        margin: [10, 10, 10, 10],
-        filename: 'HAVI_Report_' + new Date().toISOString().split('T')[0] + '.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            logging: false,
-            scrollX: 0,
-            scrollY: 0
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    var treatmentCards = (r.treatmentOptions||[]).map(function(opt) {
+        return '<div class="tx-card">'+
+            '<div class="tx-header">'+
+                '<span class="tx-name">'+eh(opt.name)+'</span>'+
+                '<span class="risk-badge" style="background:'+riskBg(opt.riskLevel)+';color:'+riskColor(opt.riskLevel)+'">'+eh(opt.riskLevel)+'</span>'+
+            '</div>'+
+            '<div class="tx-row"><b>Treatment:</b> '+eh(opt.description)+'</div>'+
+            '<div class="tx-row"><b>Expected Outcome:</b> '+eh(opt.expectedOutcome)+'</div>'+
+            '<div class="tx-row"><b>Timeline:</b> '+eh(opt.timeline)+'</div>'+
+        '</div>';
+    }).join('');
+
+    var nextSteps = (r.nextSteps||[]).map(function(s,i) {
+        return '<div class="step-row"><span class="step-num">'+(i+1)+'</span><span>'+eh(s)+'</span></div>';
+    }).join('');
+
+    var questions = (r.questionsForDoctor||[]).map(function(q) {
+        return '<div class="q-row">• '+eh(q)+'</div>';
+    }).join('');
+
+    var warnings = '';
+    if (r.importantWarnings && r.importantWarnings.length > 0) {
+        warnings = '<div class="warning-box"><div class="warning-title">⚠ Important Warnings</div>'+
+            r.importantWarnings.map(function(w){ return '<div class="warning-row">• '+eh(w)+'</div>'; }).join('')+
+        '</div>';
+    }
+
+    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'+
+    '<title>HAVI AI Cancer Analysis Report</title>'+
+    '<style>'+
+        '@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");'+
+        '*{box-sizing:border-box;margin:0;padding:0;}'+
+        'body{font-family:Inter,Arial,sans-serif;font-size:14px;color:#1a1a2e;background:#fff;padding:40px 48px;line-height:1.6;}'+
+        'h1{font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:4px;}'+
+        '.date{font-size:12px;color:#6b7280;margin-bottom:28px;}'+
+        'hr{border:none;border-top:1px solid #e5e7eb;margin:24px 0;}'+
+        '.section{margin-bottom:24px;}'+
+        '.section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#1a1a2e;'+
+            'border-left:4px solid #A8D8EA;padding-left:10px;margin-bottom:12px;}'+
+        '.section-content{font-size:14px;color:#374151;line-height:1.7;}'+
+        '.stage-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:16px 20px;margin-bottom:12px;}'+
+        '.stage-title{font-size:20px;font-weight:700;color:#15803d;}'+
+        '.stage-badge{display:inline-block;background:#16a34a;color:#fff;font-size:11px;font-weight:600;'+
+            'padding:3px 10px;border-radius:20px;margin-left:10px;vertical-align:middle;}'+
+        '.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}'+
+        '.meta-cell{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;}'+
+        '.meta-label{font-size:11px;color:#6b7280;font-weight:500;margin-bottom:3px;}'+
+        '.meta-value{font-size:14px;font-weight:600;color:#1a1a2e;}'+
+        '.step-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}'+
+        '.step-num{min-width:26px;height:26px;background:#A8D8EA;color:#1a1a2e;border-radius:50%;'+
+            'font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}'+
+        '.tx-card{border:1px solid #e5e7eb;border-radius:10px;padding:14px 18px;margin-bottom:12px;background:#fafafa;}'+
+        '.tx-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}'+
+        '.tx-name{font-weight:700;font-size:15px;color:#1a1a2e;}'+
+        '.risk-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid currentColor;}'+
+        '.tx-row{font-size:13px;color:#374151;margin-bottom:6px;line-height:1.5;}'+
+        '.tx-row b{color:#1a1a2e;}'+
+        '.q-row{font-size:13px;color:#374151;padding:7px 0;border-bottom:1px solid #f3f4f6;line-height:1.5;}'+
+        '.q-row:last-child{border-bottom:none;}'+
+        '.warning-box{background:#fef3c7;border:1px solid #fcd34d;border-radius:10px;padding:16px 20px;margin-bottom:24px;}'+
+        '.warning-title{font-weight:700;color:#92400e;margin-bottom:8px;}'+
+        '.warning-row{font-size:13px;color:#78350f;margin-bottom:4px;}'+
+        '.disclaimer{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:14px 18px;'+
+            'font-size:12px;color:#6b7280;line-height:1.6;margin-top:8px;}'+
+        '@media print{body{padding:20px 28px;}@page{margin:15mm;}}'+
+    '</style></head><body>'+
+
+    '<h1>🏥 HAVI AI Cancer Analysis Report</h1>'+
+    '<div class="date">'+date+'</div>'+
+    '<hr>'+
+
+    '<div class="section">'+
+        '<div class="section-title">Patient Summary</div>'+
+        '<div class="section-content">'+eh(r.patientSummary)+'</div>'+
+    '</div>'+
+
+    '<div class="section">'+
+        '<div class="section-title">Current Stage</div>'+
+        '<div class="stage-box">'+
+            '<div class="stage-title">'+eh(r.currentStage)+'</div>'+
+        '</div>'+
+        '<div class="section-content">'+eh(r.stageExplanation)+'</div>'+
+    '</div>'+
+
+    '<div class="section">'+
+        '<div class="section-title">What To Do Next</div>'+
+        nextSteps+
+    '</div>'+
+
+    '<div class="section">'+
+        '<div class="section-title">Treatment Options</div>'+
+        treatmentCards+
+    '</div>'+
+
+    '<div class="section">'+
+        '<div class="section-title">Questions to Ask Your Doctor</div>'+
+        questions+
+    '</div>'+
+
+    warnings+
+
+    '<div class="disclaimer">'+eh(r.disclaimer)+'</div>'+
+    '</body></html>';
+
+    var win = window.open('', '_blank', 'width=900,height=700');
+    if (!win) {
+        alert('Please allow pop-ups for this site, then try again.');
+        return;
+    }
+    win.document.write(html);
+    win.document.close();
+    win.onload = function() {
+        win.focus();
+        win.print();
     };
-
-    html2pdf().set(opt).from(clone).save()
-        .then(function() {
-            document.body.removeChild(clone);
-        })
-        .catch(function(err) {
-            if (document.body.contains(clone)) document.body.removeChild(clone);
-            console.error('PDF generation error:', err);
-            alert('PDF generation failed. Please try again.');
-        });
 };
 
 // ============================================
