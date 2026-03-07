@@ -368,24 +368,50 @@ window.shareCopyLink = function() {
 };
 
 window.shareQRCode = function() {
-    var url = getShareUrl();
+    var reportUrl = getShareUrl();
     var qrArea = document.getElementById('qrArea');
     var qrContainer = document.getElementById('qrCodeContainer');
     if (!qrArea || !qrContainer) return;
-    qrContainer.innerHTML = '';
+    qrContainer.innerHTML = '<p style="color:#6b7280;font-size:13px;text-align:center;padding:20px 0;">⏳ Generating QR code…</p>';
     qrArea.style.display = 'block';
-    if (typeof QRCode !== 'undefined') {
-        new QRCode(qrContainer, {
-            text: url,
-            width: 180,
-            height: 180,
-            colorDark: '#1a1a2e',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.M
-        });
-    } else {
-        qrContainer.innerHTML = '<p style="color:#6b7280;font-size:13px;">QR library loading\u2026 please try again in a moment.</p>';
-    }
+
+    // Shorten the URL via serverless proxy so the QR code is scannable
+    fetch('/api/shorten', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: reportUrl })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        var finalUrl = (data && data.short) ? data.short : reportUrl;
+        qrContainer.innerHTML = '';
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(qrContainer, {
+                text: finalUrl,
+                width: 220,
+                height: 220,
+                colorDark: '#1a1a2e',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.L
+            });
+        } else {
+            qrContainer.innerHTML = '<p style="color:#6b7280;font-size:13px;">QR library not loaded. Please refresh and try again.</p>';
+        }
+    })
+    .catch(function() {
+        // Fallback: try to QR the full URL anyway
+        qrContainer.innerHTML = '';
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(qrContainer, {
+                text: reportUrl,
+                width: 220,
+                height: 220,
+                colorDark: '#1a1a2e',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.L
+            });
+        }
+    });
 };
 
 window.shareViaApp = function() {
