@@ -276,12 +276,14 @@ window.sendMessage = async function() {
         const language = langSelector ? langSelector.value : 'en';
         
         // Build chat prompt
-        const systemPrompt = `You are HAVI, an AI cancer guidance assistant. Provide helpful, evidence-based information about cancer treatment, diagnosis, and clinical guidelines. Be compassionate, clear, and informative. Always remind users to consult with their healthcare providers for medical decisions. Language: ${language}`;
+        const systemPrompt = `You are HAVI, an AI cancer guidance assistant. Provide helpful, evidence-based information about cancer treatment, diagnosis, and clinical guidelines. Be compassionate, clear, and informative. Always remind users to consult with their healthcare providers for medical decisions.`;
         
         const parts = [
             { text: systemPrompt },
             { text: `\n\nUser Question: ${message}` }
         ];
+        
+        console.log('Sending chat message to API...');
         
         // Call API
         const response = await fetch('/api/analyze', {
@@ -290,12 +292,21 @@ window.sendMessage = async function() {
             body: JSON.stringify({ parts })
         });
         
+        console.log('API response status:', response.status);
+        
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.error || 'API request failed');
+            console.error('API error response:', error);
+            throw new Error(error.error || `API error: ${response.status}`);
         }
         
         const data = await response.json();
+        console.log('API response data:', data);
+        
+        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts) {
+            throw new Error('Invalid response format from API');
+        }
+        
         const aiResponse = data.candidates[0].content.parts[0].text;
         
         // Remove loading indicator
@@ -314,7 +325,7 @@ window.sendMessage = async function() {
         
         const errorDiv = document.createElement('div');
         errorDiv.className = 'message bot-message';
-        errorDiv.innerHTML = `<p>❌ Sorry, I encountered an error. Please try again.</p>`;
+        errorDiv.innerHTML = `<p>❌ Error: ${escapeHtml(error.message)}</p>`;
         chatMessages.appendChild(errorDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     } finally {
