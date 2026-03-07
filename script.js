@@ -292,12 +292,311 @@ window.analyzeReport = async function() {
     analyzeBtn.innerHTML = '⏳ Analyzing...';
     
     try {
-        alert('File analysis feature coming soon! In production, this will\'t send your medical documents to Google Gemini API for personalized analysis.');
+        // Extract content from all uploaded files
+        const fileParts = [];
         
+        for (let file of fileInput.files) {
+            const content = await extractFileContent(file);
+            if (content) {
+                fileParts.push(content);
+            }
+        }
+        
+        // Build system prompt based on language
+        const langSelector = document.querySelector('.language-selector');
+        const language = langSelector ? langSelector.value : 'en';
+        const systemPrompt = getSystemPrompt(language);
+        
+        // Build the message parts
+        const parts = [
+            { text: systemPrompt }
+        ];
+        
+        const question = userQuestion.value.trim();
+        if (question) {
+            parts.push({ text: `\n\nUser Question: ${question}` });
+        }
+        
+        // Add file contents
+        parts.push(...fileParts);
+        
+        // Call the backend API
+        const response = await fetch('/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ parts })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'API request failed');
+        }
+        
+        const data = await response.json();
+        const responseText = data.candidates[0].content.parts[0].text;
+        
+        // Parse and render the report
+        let report;
+        try {
+            report = JSON.parse(responseText);
+        } catch (parseErr) {
+            console.error('Failed to parse response:', responseText);
+            throw new Error('Invalid response format from API');
+        }
+        
+        renderAnalysisReport(report);
         analyzeBtn.disabled = false;
         analyzeBtn.innerHTML = originalText;
+        
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Analysis error:', error);
+        alert(`Error: ${error.message}`);
+        analyzeBtn.disabled = false;
+        analyzeBtn.innerHTML = originalText;
+    }
+};
+
+// Extract content from different file types
+async function extractFileContent(file) {
+    try {
+        if (file.type === 'application/pdf') {
+            return await extractPdfContent(file);
+        } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
+                   file.type === 'application/msword') {
+            return await extractDocxContent(file);
+        } else if (file.type.startsWith('image/')) {
+            return await extractImageContent(file);
+        }
+        return null;
+    } catch (err) {
+        console.error(`Error extracting ${file.name}:`, err);
+        return null;
+    }
+}
+
+// Extract text from PDF
+async function extractPdfContent(file) {
+    if (typeof pdfjsLib === 'undefined') {
+        throw new Error('PDF.js not loaded');
+    }
+    
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+    let text = '';
+    
+    for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        text += textContent.items.map(item => item.str).join('') + '\n';
+    }
+    
+    return { text: `[Medical Document: ${file.name}]\n${text}` };
+}
+
+// Extract text from DOCX
+async function extractDocxContent(file) {
+    if (typeof mammoth === 'undefined') {
+        throw new Error('Mammoth.js not loaded');
+    }
+    
+    const arrayBuffer = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer });
+    return { text: `[Medical Document: ${file.name}]\n${result.value}` };
+}
+
+// Extract image as base64
+async function extractImageContent(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const base64 = reader.result.split(',')[1];
+            resolve({
+                inline_data: {
+                    mime_type: file.type,
+                    data: base64
+                }
+            });
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// Get system prompt based on language
+function getSystemPrompt(language) {
+    const prompts = {
+        en: `You are HAVI, an expert medical AI assistant specialized in oncology.
+You help cancer patients and their families understand medical reports and make confident, informed decisions.
+Analyze the provided medical documents (pathology reports, imaging results, lab tests, clinical notes) and generate a clear, compassionate, patient-friendly report.
+
+IMPORTANT: Respond ONLY with a valid JSON object. No markdown, no explanation outside the JSON.
+
+Return this exact JSON structure:
+{
+  "language": "en",
+  "patientSummary": "Brief summary of what was analyzed and key findings",
+  "currentStage": "e.g. Stage IIA Breast Cancer",
+  "stageExplanation": "Plain language explanation of what this stage means",
+  "nextSteps": ["Step 1", "Step 2", "Step 3"],
+  "treatmentOptions": [
+    {
+      "name": "Treatment name",
+      "description": "What this treatment involves",
+      "expectedOutcome": "What results to expect",
+      "riskLevel": "Low",
+      "timeline": "e.g. 6 weeks"
+    }
+  ],
+  "questionsForDoctor": ["Question 1", "Question 2"],
+  "importantWarnings": ["Warning if any"],
+  "disclaimer": "This AI-generated report is based on clinical guidelines and the documents provided. It is for informational purposes only and does not constitute medical advice. Please consult your oncologist before making any medical decisions."
+}
+
+riskLevel must be exactly one of: "Low", "Medium", "High"
+Be warm, clear, and avoid medical jargon. Write for a patient with no medical background.
+If the content is not a medical document, say so in patientSummary and ask for correct documents.`,
+        
+        es: `Eres HAVI, un asistente médico de IA experto especializado en oncología.
+Ayudas a pacientes con cáncer y sus familias a comprender los informes médicos y tomar decisiones informadas y seguras.
+Analiza los documentos médicos proporcionados y genera un informe claro, compasivo y fácil de entender para el paciente.
+
+IMPORTANTE: Responde SOLO con un objeto JSON válido. Sin markdown, sin explicación fuera del JSON.
+
+Devuelve esta estructura JSON exacta:
+{
+  "language": "es",
+  "patientSummary": "Breve resumen de lo analizado y hallazgos clave",
+  "currentStage": "ej. Cáncer de Mama Etapa IIA",
+  "stageExplanation": "Explicación en lenguaje sencillo de lo que significa esta etapa",
+  "nextSteps": ["Paso 1", "Paso 2", "Paso 3"],
+  "treatmentOptions": [
+    {
+      "name": "Nombre del tratamiento",
+      "description": "En qué consiste este tratamiento",
+      "expectedOutcome": "Qué resultados esperar",
+      "riskLevel": "Bajo",
+      "timeline": "ej. 6 semanas"
+    }
+  ],
+  "questionsForDoctor": ["Pregunta 1", "Pregunta 2"],
+  "importantWarnings": ["Advertencia si existe"],
+  "disclaimer": "Este informe generado por IA se basa en guías clínicas y los documentos proporcionados. Es solo para fines informativos y no constituye asesoramiento médico. Por favor consulte a su oncólogo antes de tomar cualquier decisión médica."
+}
+
+riskLevel debe ser exactamente uno de: "Bajo", "Medio", "Alto"
+Sé cálido, claro y evita la jerga médica.`
+    };
+    
+    return prompts[language] || prompts.en;
+}
+
+// Render analysis report
+function renderAnalysisReport(report) {
+    const now = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    
+    const html = `
+        <div class="report-header">
+            <div class="report-title">🏥 HAVI AI Cancer Analysis Report</div>
+            <div class="report-date">${now}</div>
+        </div>
+
+        <div class="report-section">
+            <div class="report-section-title">📋 Patient Summary</div>
+            <div class="report-section-content">${escapeHtml(report.patientSummary || '')}</div>
+        </div>
+
+        <div class="report-section">
+            <div class="report-section-title">🏥 Current Stage</div>
+            <div class="current-stage-title">${escapeHtml(report.currentStage || '')}</div>
+            <div class="report-section-content">${escapeHtml(report.stageExplanation || '')}</div>
+        </div>
+
+        <div class="report-section">
+            <div class="report-section-title">✅ What To Do Next</div>
+            <ol class="next-steps-list">
+                ${(report.nextSteps || []).map((step, i) => `
+                    <li>
+                        <span class="step-badge">${i + 1}</span>
+                        <span>${escapeHtml(step)}</span>
+                    </li>
+                `).join('')}
+            </ol>
+        </div>
+
+        <div class="report-section">
+            <div class="report-section-title">💊 Treatment Options</div>
+            <div class="treatment-grid">
+                ${(report.treatmentOptions || []).map(option => `
+                    <div class="treatment-card">
+                        <div class="treatment-title">${escapeHtml(option.name || '')}</div>
+                        <span class="risk-badge risk-${getRiskClass(option.riskLevel)}">${escapeHtml(option.riskLevel || 'Unknown')}</span>
+                        <div class="treatment-item"><span class="treatment-label">Treatment:</span> ${escapeHtml(option.description || '')}</div>
+                        <div class="treatment-item"><span class="treatment-label">Expected Outcome:</span> ${escapeHtml(option.expectedOutcome || '')}</div>
+                        <div class="treatment-item"><span class="treatment-label">Timeline:</span> ${escapeHtml(option.timeline || '')}</div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+
+        <div class="report-section">
+            <div class="report-section-title">❓ Questions to Ask Your Doctor</div>
+            <ul class="questions-list">
+                ${(report.questionsForDoctor || []).map(q => `<li>❓ ${escapeHtml(q)}</li>`).join('')}
+            </ul>
+        </div>
+
+        ${(report.importantWarnings && report.importantWarnings.length > 0) ? `
+            <div class="warning-box">
+                <div class="warning-title">⚠️ Important Warnings</div>
+                ${report.importantWarnings.map(w => `<div class="warning-item">• ${escapeHtml(w)}</div>`).join('')}
+            </div>
+        ` : ''}
+
+        <div class="disclaimer">
+            ${escapeHtml(report.disclaimer || '')}
+        </div>
+
+        <button class="download-btn" onclick="downloadReportPDF()">⬇️ Download Report (PDF)</button>
+    `;
+    
+    const reportContainer = document.getElementById('reportContainer');
+    if (reportContainer) {
+        reportContainer.innerHTML = html;
+        reportContainer.classList.add('show');
+        reportContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function getRiskClass(level) {
+    if (!level) return 'low';
+    const levelLower = level.toString().toLowerCase();
+    if (levelLower === 'low' || levelLower === '低') return 'low';
+    if (levelLower === 'high' || levelLower === '高') return 'high';
+    return 'medium';
+}
+
+window.downloadReportPDF = function() {
+    const element = document.getElementById('reportContainer');
+    if (!element) {
+        alert('No report to download');
+        return;
+    }
+    
+    if (typeof html2pdf === 'undefined') {
+        alert('PDF library not loaded');
+        return;
+    }
+    
+    const opt = {
+        margin: 15,
+        filename: 'HAVI_Report_' + new Date().toISOString().split('T')[0] + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    
+    html2pdf().set(opt).from(element).save();
+};
         alert('An error occurred. Please try again.');
         analyzeBtn.disabled = false;
         analyzeBtn.innerHTML = originalText;

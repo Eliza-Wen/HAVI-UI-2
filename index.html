@@ -386,28 +386,8 @@
         };
 
         async function analyzeReport() {
-            const userQuestion = document.getElementById('userQuestion').value;
-            const analyzeBtn = document.getElementById('analyzeBtn');
-            
-            if (uploadedFiles.length === 0 && !userQuestion) {
-                alert('Please upload at least one file or enter a question.');
-                return;
-            }
-
-            analyzeBtn.disabled = true;
-            analyzeBtn.innerHTML = '⏳ Analyzing...';
-
-            try {
-                // In production, send to backend API
-                alert('Analysis feature coming soon! This will process your medical documents using AI.');
-                analyzeBtn.disabled = false;
-                analyzeBtn.innerHTML = '✨ Generate AI Analysis Report';
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-                analyzeBtn.disabled = false;
-                analyzeBtn.innerHTML = '✨ Generate AI Analysis Report';
-            }
+            // This function is overridden by script.js with full Gemini API integration
+            console.log('Using script.js analyzeReport function');
         }
 
         function sendMessage() {
