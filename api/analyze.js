@@ -21,7 +21,7 @@ module.exports = async function handler(req, res) {
     
     for (const modelName of models) {
       try {
-        const apiUrl = https://generativelanguage.googleapis.com/v1/models/:generateContent?key=;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
         console.log('Trying model:', modelName);
         
         const geminiRes = await fetch(apiUrl, {
