@@ -34,13 +34,7 @@ module.exports = async function handler(req, res) {
         generationConfig: {
           temperature: 0.3,
           maxOutputTokens: 4000
-        },
-        safetySettings: [
-          {
-            category: 'HARM_CATEGORY_UNSPECIFIED',
-            threshold: 'BLOCK_NONE'
-          }
-        ]
+        }
       })
     });
 
