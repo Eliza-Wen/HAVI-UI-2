@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAVI – AI Cancer Analysis Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Inter, Arial, sans-serif;
+    font-size: 14px;
+    color: #1a1a2e;
+    background: #f4f6f9;
+    min-height: 100vh;
+  }
+
+  /* ── Top bar ─────────────────────────────────── */
+  .top-bar {
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+  .top-bar-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .top-bar-logo span { color: #A8D8EA; }
+  .top-bar-actions { display: flex; gap: 10px; align-items: center; }
+  .btn-print {
+    background: linear-gradient(135deg, #A8D8EA, #8BBFD4);
+    color: #1a1a2e;
+    font-weight: 700;
+    font-size: 13px;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 20px;
+    cursor: pointer;
+    transition: opacity .2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-print:hover { opacity: .85; }
+  .btn-home {
+    background: transparent;
+    color: #6b7280;
+    font-size: 13px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color .2s, color .2s;
+  }
+  .btn-home:hover { border-color: #A8D8EA; color: #1a1a2e; }
+
+  /* ── Page wrapper ─────────────────────────────── */
+  .page-wrapper {
+    max-width: 760px;
+    margin: 32px auto 60px;
+    padding: 0 20px;
+  }
+
+  /* ── Report card ──────────────────────────────── */
+  .report-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.08);
+    overflow: hidden;
+  }
+  .report-header {
+    background: linear-gradient(135deg, #A8D8EA 0%, #8BBFD4 100%);
+    padding: 28px 36px 24px;
+  }
+  .report-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+  }
+  .report-header .report-date {
+    font-size: 12px;
+    color: rgba(26,26,46,.65);
+  }
+  .report-header .havi-tag {
+    display: inline-block;
+    background: rgba(255,255,255,.45);
+    color: #1a1a2e;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-top: 8px;
+  }
+
+  .report-body { padding: 32px 36px; }
+
+  .section { margin-bottom: 28px; }
+  .section:last-child { margin-bottom: 0; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+    color: #1a1a2e;
+    border-left: 4px solid #A8D8EA;
+    padding-left: 10px;
+    margin-bottom: 12px;
+  }
+  .section-content {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.75;
+  }
+
+  /* Stage box */
+  .stage-box {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .stage-title { font-size: 20px; font-weight: 700; color: #15803d; }
+
+  /* Steps */
+  .step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .step-num {
+    min-width: 26px;
+    height: 26px;
+    background: #A8D8EA;
+    color: #1a1a2e;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-text { font-size: 14px; color: #374151; line-height: 1.65; padding-top: 3px; }
+
+  /* Treatment cards */
+  .tx-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    background: #fafafa;
+  }
+  .tx-card:last-child { margin-bottom: 0; }
+  .tx-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tx-name { font-weight: 700; font-size: 15px; color: #1a1a2e; }
+  .risk-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .tx-row { font-size: 13px; color: #374151; margin-bottom: 6px; line-height: 1.5; }
+  .tx-row b { color: #1a1a2e; }
+
+  /* Questions */
+  .q-row {
+    font-size: 13px;
+    color: #374151;
+    padding: 8px 0;
+    border-bottom: 1px solid #f3f4f6;
+    line-height: 1.5;
+  }
+  .q-row:last-child { border-bottom: none; }
+
+  /* Warning */
+  .warning-box {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .warning-title { font-weight: 700; color: #92400e; margin-bottom: 8px; font-size: 14px; }
+  .warning-row { font-size: 13px; color: #78350f; margin-bottom: 4px; }
+
+  /* Disclaimer */
+  .disclaimer {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.65;
+    margin-top: 8px;
+  }
+
+  /* Error state */
+  .error-state {
+    text-align: center;
+    padding: 80px 40px;
+  }
+  .error-state h2 { font-size: 20px; margin-bottom: 10px; color: #1a1a2e; }
+  .error-state p { color: #6b7280; font-size: 14px; margin-bottom: 20px; }
+  .error-state a {
+    display: inline-block;
+    background: #A8D8EA;
+    color: #1a1a2e;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+
+  /* ── Print styles ─────────────────────────────── */
+  @media print {
+    body { background: #fff; }
+    .top-bar { display: none; }
+    .page-wrapper { margin: 0; padding: 0; max-width: 100%; }
+    .report-card { box-shadow: none; border-radius: 0; }
+    .report-body { padding: 24px 32px; }
+    @page { margin: 12mm 15mm; }
+  }
+
+  @media (max-width: 600px) {
+    .top-bar { padding: 10px 16px; }
+    .page-wrapper { padding: 0 12px; margin-top: 20px; }
+    .report-header { padding: 20px 20px 16px; }
+    .report-body { padding: 20px 20px; }
+    .btn-home { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="top-bar">
+  <a class="top-bar-logo" href="/">H<span>A</span>VI</a>
+  <div class="top-bar-actions">
+    <a class="btn-home" href="/">← Back to HAVI</a>
+    <button class="btn-print" onclick="window.print()">⬇ Save as PDF</button>
+  </div>
+</div>
+
+<!-- Report content injected here -->
+<div class="page-wrapper">
+  <div id="reportRoot">
+    <div class="report-card">
+      <div class="error-state">
+        <h2>Loading report…</h2>
+        <p>Please wait while your report is being prepared.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  function eh(s) {
+    return String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function riskColor(level) {
+    var l = String(level || '').toLowerCase();
+    if (l === 'low' || l === '低') return '#16a34a';
+    if (l === 'high' || l === '高' || l === 'alto') return '#dc2626';
+    return '#d97706';
+  }
+
+  function riskBg(level) {
+    var l = String(level || '').toLowerCase();
+    if (l === 'low' || l === '低') return '#f0fdf4';
+    if (l === 'high' || l === '高' || l === 'alto') return '#fef2f2';
+    return '#fffbeb';
+  }
+
+  function renderReport(r) {
+    var now = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    var nextStepsHtml = (r.nextSteps || []).map(function(s, i) {
+      return '<div class="step-row">' +
+        '<span class="step-num">' + (i + 1) + '</span>' +
+        '<span class="step-text">' + eh(s) + '</span>' +
+        '</div>';
+    }).join('');
+
+    var txHtml = (r.treatmentOptions || []).map(function(opt) {
+      return '<div class="tx-card">' +
+        '<div class="tx-header">' +
+          '<span class="tx-name">' + eh(opt.name) + '</span>' +
+          '<span class="risk-badge" style="background:' + riskBg(opt.riskLevel) + ';color:' + riskColor(opt.riskLevel) + '">' + eh(opt.riskLevel) + '</span>' +
+        '</div>' +
+        '<div class="tx-row"><b>Treatment:</b> ' + eh(opt.description) + '</div>' +
+        '<div class="tx-row"><b>Expected Outcome:</b> ' + eh(opt.expectedOutcome) + '</div>' +
+        '<div class="tx-row"><b>Timeline:</b> ' + eh(opt.timeline) + '</div>' +
+        '</div>';
+    }).join('');
+
+    var questionsHtml = (r.questionsForDoctor || []).map(function(q) {
+      return '<div class="q-row">❓ ' + eh(q) + '</div>';
+    }).join('');
+
+    var warningsHtml = '';
+    if (r.importantWarnings && r.importantWarnings.length > 0) {
+      warningsHtml = '<div class="section"><div class="warning-box">' +
+        '<div class="warning-title">⚠️ Important Warnings</div>' +
+        r.importantWarnings.map(function(w) { return '<div class="warning-row">• ' + eh(w) + '</div>'; }).join('') +
+        '</div></div>';
+    }
+
+    var html =
+      '<div class="report-card">' +
+        '<div class="report-header">' +
+          '<h1>🏥 HAVI AI Cancer Analysis Report</h1>' +
+          '<div class="report-date">Generated on ' + eh(now) + '</div>' +
+          '<div class="havi-tag">Powered by HAVI · havi-ui-2.vercel.app</div>' +
+        '</div>' +
+        '<div class="report-body">' +
+
+          '<div class="section">' +
+            '<div class="section-title">Patient Summary</div>' +
+            '<div class="section-content">' + eh(r.patientSummary) + '</div>' +
+          '</div>' +
+
+          '<div class="section">' +
+            '<div class="section-title">Current Stage</div>' +
+            '<div class="stage-box"><div class="stage-title">' + eh(r.currentStage) + '</div></div>' +
+            '<div class="section-content">' + eh(r.stageExplanation) + '</div>' +
+          '</div>' +
+
+          '<div class="section">' +
+            '<div class="section-title">What To Do Next</div>' +
+            nextStepsHtml +
+          '</div>' +
+
+          '<div class="section">' +
+            '<div class="section-title">Treatment Options</div>' +
+            txHtml +
+          '</div>' +
+
+          '<div class="section">' +
+            '<div class="section-title">Questions to Ask Your Doctor</div>' +
+            questionsHtml +
+          '</div>' +
+
+          warningsHtml +
+
+          '<div class="disclaimer">' + eh(r.disclaimer) + '</div>' +
+
+        '</div>' +
+      '</div>';
+
+    document.getElementById('reportRoot').innerHTML = html;
+
+    // Update page title
+    if (r.currentStage) {
+      document.title = 'HAVI Report – ' + r.currentStage;
+    }
+  }
+
+  function showError(msg) {
+    document.getElementById('reportRoot').innerHTML =
+      '<div class="report-card"><div class="error-state">' +
+        '<h2>⚠️ Report Not Found</h2>' +
+        '<p>' + eh(msg) + '</p>' +
+        '<a href="/">Generate a new report on HAVI</a>' +
+      '</div></div>';
+  }
+
+  // Parse the ?report= parameter
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var encoded = params.get('report');
+    if (!encoded) {
+      showError('No report data found in this link. Please go back to HAVI and generate a new report.');
+      return;
+    }
+    var json = decodeURIComponent(escape(atob(encoded)));
+    var report = JSON.parse(json);
+    if (!report || typeof report !== 'object') throw new Error('Invalid report data');
+    renderReport(report);
+  } catch (e) {
+    showError('This link appears to be invalid or corrupted. Please go back to HAVI and generate a new report.');
+  }
+})();
+</script>
+
+</body>
+</html>

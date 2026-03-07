@@ -300,7 +300,7 @@ window.closeShareModal = function() {
 function getShareUrl() {
     try {
         var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(window._lastReport))));
-        return window.location.origin + window.location.pathname + '?report=' + encoded;
+        return window.location.origin + '/report.html?report=' + encoded;
     } catch(e) {
         return window.location.href;
     }
