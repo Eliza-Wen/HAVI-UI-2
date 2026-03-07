@@ -15,7 +15,31 @@ document.addEventListener('DOMContentLoaded', function() {
     setupArticles();
     setupInsuranceModals();
     setupChatInterface();
+    loadReportFromUrl();
 });
+
+// If the URL contains ?report=..., decode and render the shared report automatically
+function loadReportFromUrl() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const encoded = params.get('report');
+        if (!encoded) return;
+
+        const json = decodeURIComponent(escape(atob(encoded)));
+        const report = JSON.parse(json);
+        if (!report || typeof report !== 'object') return;
+
+        // Scroll to the upload section and switch to report tab after a short delay
+        // so the DOM is ready
+        setTimeout(function() {
+            renderAnalysisReport(report);
+            const uploadSection = document.getElementById('uploadSection');
+            if (uploadSection) uploadSection.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+    } catch(e) {
+        console.warn('Could not load report from URL:', e);
+    }
+}
 
 function setupTabSwitching() {
     const tabButtons = document.querySelectorAll('.tab-btn');
@@ -253,10 +277,23 @@ window.sendStarterMessage = function(btn) {
 };
 
 window.shareWithDoctor = function() {
+    if (!window._lastReport) {
+        alert('No report to share yet. Please generate a report first.');
+        return;
+    }
     const panel = document.getElementById('shareLinkPanel');
     const input = document.getElementById('shareLinkInput');
     if (!panel || !input) return;
-    input.value = window.location.href;
+
+    // Encode the full report JSON into the URL so the recipient sees the report when they open the link
+    try {
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(window._lastReport))));
+        const base = window.location.origin + window.location.pathname;
+        input.value = base + '?report=' + encoded;
+    } catch(e) {
+        input.value = window.location.href;
+    }
+
     panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
     if (panel.style.display === 'block') {
         input.select();
