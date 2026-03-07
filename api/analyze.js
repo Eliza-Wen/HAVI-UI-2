@@ -16,7 +16,7 @@ module.exports = async function handler(req, res) {
     const { parts } = req.body;
     if (!parts) return res.status(400).json({ error: 'No message parts' });
     
-    const models = ['gemini-1.5-flash', 'gemini-pro'];
+    const models = ['gemini-2.5-flash'];
     let lastError;
     
     for (const modelName of models) {
