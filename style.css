@@ -209,45 +209,180 @@ body {
 
 /* Hero Cards */
 .hero-cards {
-    display: grid;
-    grid-template-columns: 1fr;
+    position: relative;
+    display: flex;
+    flex-direction: column;
     gap: 16px;
+    width: 100%;
+    max-width: 320px;
 }
 
 .status-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 72px;
+    padding: 14px 18px;
+    gap: 14px;
     background: white;
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border-top: 4px solid var(--blue);
-    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+    transition: all 0.3s ease;
+}
+
+/* Card positioning - staggered diagonal effect */
+.status-card.card-uploading {
+    align-self: flex-start;
+    width: 280px;
+    animation: float1 3s ease-in-out infinite;
+}
+
+.status-card.card-processing {
+    align-self: center;
+    width: 260px;
+    animation: float2 3s ease-in-out infinite 0.5s;
+}
+
+.status-card.card-complete {
+    align-self: flex-end;
+    width: 270px;
+    animation: float3 3s ease-in-out infinite 1s;
 }
 
 .status-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-.card-icon {
-    font-size: 2.5rem;
-    margin-bottom: 8px;
+/* Icon Box */
+.card-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.card-icon-box svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* Text Wrapper */
+.card-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
 }
 
 .card-title {
+    font-family: 'Inter', sans-serif;
     font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 4px;
-}
-
-.card-status {
     font-size: 14px;
-    color: var(--text-gray);
+    color: #1A1A2E;
+    margin: 0;
 }
 
-.card-status.complete {
-    color: #10b981;
-    font-weight: 600;
+.card-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #9CA3AF;
+    margin: 0;
+}
+
+/* Progress Indicators */
+.card-progress {
+    margin-top: 4px;
+}
+
+/* Progress Bar (Card 1) */
+.progress-bar {
+    height: 3px;
+    border-radius: 999px;
+    background: #E5E7EB;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #A8D8EA;
+    width: 35%;
+    border-radius: 999px;
+    animation: fillProgress 2s ease-in-out infinite;
+}
+
+@keyframes fillProgress {
+    0% { width: 30%; }
+    50% { width: 50%; }
+    100% { width: 30%; }
+}
+
+/* Pulsing Dots (Card 2) */
+.pulsing-dots {
+    display: flex;
+    gap: 5px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #A8D8EA;
+    animation: pulse 1.4s ease-in-out infinite;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* Completion Bars (Card 3) */
+.completion-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.bar {
+    height: 3px;
+    border-radius: 999px;
+    background: #86EFAC;
+}
+
+.bar.bar-full {
+    width: 100%;
+}
+
+.bar.bar-partial {
+    width: 75%;
+}
+
+/* Float Animations */
+@keyframes float1 {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes float2 {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes float3 {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
 }
 
 /* ============================================
@@ -867,7 +1002,22 @@ body {
     }
 
     .hero-cards {
-        grid-template-columns: repeat(3, 1fr);
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 20px;
+        max-width: 100%;
+        align-items: flex-start;
+    }
+
+    .status-card {
+        align-self: auto !important;
+    }
+
+    .status-card.card-uploading,
+    .status-card.card-processing,
+    .status-card.card-complete {
+        width: 100% !important;
+        max-width: 250px;
     }
 
     .analyze-section {
@@ -939,11 +1089,29 @@ body {
     }
 
     .hero-cards {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+        max-width: 100%;
+    }
+
+    .status-card {
+        width: 100% !important;
+        height: auto;
+        padding: 12px 14px;
+    }
+
+    .status-card.card-uploading,
+    .status-card.card-processing,
+    .status-card.card-complete {
+        align-self: stretch !important;
+        animation: none !important;
     }
 
     .card-title {
-        font-size: 14px;
+        font-size: 13px;
+    }
+
+    .card-subtitle {
+        font-size: 11px;
     }
 
     .upload-zone {
