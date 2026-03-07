@@ -597,11 +597,6 @@ window.downloadReportPDF = function() {
     
     html2pdf().set(opt).from(element).save();
 };
-        alert('An error occurred. Please try again.');
-        analyzeBtn.disabled = false;
-        analyzeBtn.innerHTML = originalText;
-    }
-};
 
 // ============================================
 // PDF DOWNLOAD FUNCTIONALITY
