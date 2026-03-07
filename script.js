@@ -243,6 +243,43 @@ function setupChatInterface() {
     }
 }
 
+window.sendStarterMessage = function(btn) {
+    const chatInput = document.getElementById('chatInput');
+    if (!chatInput) return;
+    chatInput.value = btn.textContent.trim();
+    const chatStarters = document.getElementById('chatStarters');
+    if (chatStarters) chatStarters.style.display = 'none';
+    window.sendMessage();
+};
+
+window.shareWithDoctor = function() {
+    const url = window.location.href;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+            alert('Link copied to clipboard! Share it with your doctor.');
+        }).catch(() => {
+            prompt('Copy this link to share with your doctor:', url);
+        });
+    } else {
+        prompt('Copy this link to share with your doctor:', url);
+    }
+};
+
+// Convert markdown-like text to HTML for chat responses
+function markdownToHtml(text) {
+    // Bold **text**
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    // Convert bullet lines to <li>
+    text = text.replace(/^[\*\-] (.+)$/gm, '<li>$1</li>');
+    // Wrap consecutive <li> blocks in <ul>
+    text = text.replace(/(<li>[\s\S]*?<\/li>)(\n(?!<li>)|$)/g, (m, list) => '<ul>' + list + '</ul>');
+    // Paragraphs: double newlines
+    text = text.replace(/\n{2,}/g, '</p><p>');
+    // Single newlines to <br>
+    text = text.replace(/\n/g, '<br>');
+    return '<p>' + text + '</p>';
+}
+
 window.sendMessage = async function() {
     const chatInput = document.getElementById('chatInput');
     const chatMessages = document.getElementById('chatMessages');
@@ -251,6 +288,10 @@ window.sendMessage = async function() {
     
     const message = chatInput.value.trim();
     if (!message) return;
+
+    // Hide starter chips once user sends a message
+    const chatStarters = document.getElementById('chatStarters');
+    if (chatStarters) chatStarters.style.display = 'none';
     
     // Add user message
     const userDiv = document.createElement('div');
@@ -275,15 +316,23 @@ window.sendMessage = async function() {
         const langSelector = document.querySelector('.language-selector');
         const language = langSelector ? langSelector.value : 'en';
         
-        // Build chat prompt
-        const systemPrompt = `You are HAVI, an AI cancer guidance assistant. Provide helpful, evidence-based information about cancer treatment, diagnosis, and clinical guidelines. Be compassionate, clear, and informative. Always remind users to consult with their healthcare providers for medical decisions.`;
+        // Structured system prompt
+        const systemPrompt = `You are HAVI, an empathetic AI cancer guidance assistant. Your role is to help cancer patients and their families understand their diagnosis and navigate treatment options.
+
+Guidelines:
+- Respond in the same language as the user's question (${language})
+- Keep responses under 400 words
+- Use **bold** for important terms and section headers
+- Use bullet points (- item) for lists
+- Structure your response with clear sections when appropriate
+- Be warm, compassionate, and clear — avoid medical jargon
+- Always end with a reminder to consult their oncologist for medical decisions
+- Base answers on established clinical guidelines and evidence`;
         
         const parts = [
             { text: systemPrompt },
-            { text: `\n\nUser Question: ${message}` }
+            { text: `\n\nUser: ${message}` }
         ];
-        
-        console.log('Sending chat message to API...');
         
         // Call API
         const response = await fetch('/api/analyze', {
@@ -292,32 +341,26 @@ window.sendMessage = async function() {
             body: JSON.stringify({ parts })
         });
         
-        console.log('API response status:', response.status);
-        
         if (!response.ok) {
             const error = await response.json();
-            console.error('API error response:', error);
             throw new Error(error.error || `API error: ${response.status}`);
         }
         
         const data = await response.json();
-        console.log('API response data:', data);
         
         if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts) {
             throw new Error('Invalid response format from API');
         }
         
-        // Strip markdown code blocks if present
         let aiResponse = data.candidates[0].content.parts[0].text;
-        aiResponse = aiResponse.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
         
         // Remove loading indicator
         loadingDiv.remove();
         
-        // Add AI response
+        // Add AI response with markdown rendered as HTML
         const botDiv = document.createElement('div');
         botDiv.className = 'message bot-message';
-        botDiv.innerHTML = `<p>${escapeHtml(aiResponse)}</p>`;
+        botDiv.innerHTML = markdownToHtml(aiResponse);
         chatMessages.appendChild(botDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
         
@@ -559,16 +602,77 @@ Devuelve esta estructura JSON exacta:
 }
 
 riskLevel debe ser exactamente uno de: "Bajo", "Medio", "Alto"
-Sé cálido, claro y evita la jerga médica.`
+Sé cálido, claro y evita la jerga médica.`,
+
+        'zh-CN': `你是HAVI，一个专业的肿瘤学AI医疗助理。
+你帮助癌症患者及其家属理解医疗报告，并做出明智、有据可查的决定。
+请分析所提供的医疗文件（病理报告、影像结果、化验、临床记录），生成清晰、有温度、患者易懂的报告。
+
+重要提示：仅返回有效的JSON对象，不要有任何Markdown或JSON以外的内容。
+
+返回以下确切的JSON结构：
+{
+  "language": "zh-CN",
+  "patientSummary": "简要说明分析内容及主要发现",
+  "currentStage": "例如：乳腺癌IIA期",
+  "stageExplanation": "用通俗语言解释该分期的含义",
+  "nextSteps": ["步骤1", "步骤2", "步骤3"],
+  "treatmentOptions": [
+    {
+      "name": "治疗方案名称",
+      "description": "该治疗方案的内容",
+      "expectedOutcome": "预期效果",
+      "riskLevel": "低",
+      "timeline": "例如：6周"
+    }
+  ],
+  "questionsForDoctor": ["问题1", "问题2"],
+  "importantWarnings": ["如有警告请填写"],
+  "disclaimer": "本AI报告基于临床指南及所提供的文件生成，仅供参考，不构成医疗建议。在做出任何医疗决定之前，请咨询您的肿瘤科医生。"
+}
+
+riskLevel必须是以下之一："低"、"中"、"高"
+用温暖、清晰的语言，避免医学术语。`,
+
+        'zh-TW': `你是HAVI，一個專業的腫瘤學AI醫療助理。
+你幫助癌症患者及其家屬理解醫療報告，並做出明智、有據可查的決定。
+請分析所提供的醫療文件（病理報告、影像結果、化驗、臨床記錄），生成清晰、有溫度、患者易懂的報告。
+
+重要提示：僅返回有效的JSON物件，不要有任何Markdown或JSON以外的內容。
+
+返回以下確切的JSON結構：
+{
+  "language": "zh-TW",
+  "patientSummary": "簡要說明分析內容及主要發現",
+  "currentStage": "例如：乳癌IIA期",
+  "stageExplanation": "用通俗語言解釋該分期的含義",
+  "nextSteps": ["步驟1", "步驟2", "步驟3"],
+  "treatmentOptions": [
+    {
+      "name": "治療方案名稱",
+      "description": "該治療方案的內容",
+      "expectedOutcome": "預期效果",
+      "riskLevel": "低",
+      "timeline": "例如：6週"
+    }
+  ],
+  "questionsForDoctor": ["問題1", "問題2"],
+  "importantWarnings": ["如有警告請填寫"],
+  "disclaimer": "本AI報告基於臨床指南及所提供的文件生成，僅供參考，不構成醫療建議。在做出任何醫療決定之前，請諮詢您的腫瘤科醫生。"
+}
+
+riskLevel必須是以下之一："低"、"中"、"高"
+用溫暖、清晰的語言，避免醫學術語。`
     };
     
     return prompts[language] || prompts.en;
 }
 
-// Render analysis report
+// Render analysis report — populates the Download Report tab preview card
 function renderAnalysisReport(report) {
     const now = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    
+
+    // --- Populate hidden full-report container for PDF export ---
     const html = `
         <div class="report-header">
             <div class="report-title">🏥 HAVI AI Cancer Analysis Report</div>
@@ -630,16 +734,50 @@ function renderAnalysisReport(report) {
         <div class="disclaimer">
             ${escapeHtml(report.disclaimer || '')}
         </div>
-
-        <button class="download-btn" onclick="downloadReportPDF()">⬇️ Download Report (PDF)</button>
     `;
-    
+
     const reportContainer = document.getElementById('reportContainer');
     if (reportContainer) {
         reportContainer.innerHTML = html;
-        reportContainer.classList.add('show');
-        reportContainer.scrollIntoView({ behavior: 'smooth' });
     }
+
+    // --- Populate the preview card ---
+    const summaryEl = document.getElementById('previewSummary');
+    if (summaryEl) {
+        const summary = report.patientSummary || '';
+        summaryEl.textContent = summary.length > 180 ? summary.substring(0, 180) + '…' : summary;
+    }
+
+    const treatmentEl = document.getElementById('previewTreatment');
+    if (treatmentEl) {
+        const options = report.treatmentOptions || [];
+        if (options.length > 0) {
+            const first = options[0];
+            const desc = first.description || '';
+            treatmentEl.innerHTML = `<strong>${escapeHtml(first.name || '')}</strong> — ${escapeHtml(desc.length > 120 ? desc.substring(0, 120) + '…' : desc)}`;
+            if (options.length > 1) {
+                treatmentEl.innerHTML += `<span class="treatment-count-badge">+${options.length - 1} more</span>`;
+            }
+        }
+    }
+
+    const dateEl = document.getElementById('reportPreviewDate');
+    if (dateEl) dateEl.textContent = now;
+
+    // Show preview card, hide empty state
+    const emptyState = document.getElementById('reportEmptyState');
+    const previewCard = document.getElementById('reportPreviewCard');
+    if (emptyState) emptyState.style.display = 'none';
+    if (previewCard) previewCard.style.display = 'block';
+
+    // Switch to the Download Report tab
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    const reportTabBtn = document.querySelector('.tab-btn[data-tab="report"]');
+    const reportTabContent = document.getElementById('report-tab');
+    if (reportTabBtn) reportTabBtn.classList.add('active');
+    if (reportTabContent) reportTabContent.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function getRiskClass(level) {
@@ -718,12 +856,110 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// ============================================
+// LANGUAGE SWITCHING
+// ============================================
+
+const translations = {
+    en: {
+        navHome: 'Home',
+        navArticles: 'Articles',
+        navInsurance: 'Insurance',
+        navLegal: 'Legal',
+        navSignIn: 'Sign In',
+        heroLabel: 'AI-POWERED CANCER GUIDANCE',
+        heroTitle: 'Understand your diagnosis. Navigate your options.',
+        heroDescription: 'Upload your medical reports and get an instant, personalized AI analysis — based on the latest clinical guidelines.',
+        heroBtn1: 'Upload & Analyze',
+        heroBtn2: 'See How It Works',
+        tabUpload: '📤 Upload & Analyze',
+        tabChat: '💬 AI Chat',
+        tabReport: '📥 Download Report',
+        uploadText: 'Drop your medical files here',
+        uploadSubtext: 'PDF, JPG, PNG, Word — pathology reports, scans, lab results',
+        analyzeBtnText: '✨ Generate AI Analysis Report',
+    },
+    'zh-CN': {
+        navHome: '首页',
+        navArticles: '文章',
+        navInsurance: '保险',
+        navLegal: '法律',
+        navSignIn: '登录',
+        heroLabel: 'AI驱动的癌症指导',
+        heroTitle: '了解您的诊断，探索您的选择。',
+        heroDescription: '上传您的医疗报告，根据最新临床指南，获得即时个性化的AI分析。',
+        heroBtn1: '上传并分析',
+        heroBtn2: '了解工作原理',
+        tabUpload: '📤 上传并分析',
+        tabChat: '💬 AI对话',
+        tabReport: '📥 下载报告',
+        uploadText: '将医疗文件拖放至此处',
+        uploadSubtext: 'PDF、JPG、PNG、Word — 病理报告、扫描、化验结果',
+        analyzeBtnText: '✨ 生成AI分析报告',
+    },
+    'zh-TW': {
+        navHome: '首頁',
+        navArticles: '文章',
+        navInsurance: '保險',
+        navLegal: '法律',
+        navSignIn: '登入',
+        heroLabel: 'AI驅動的癌症指導',
+        heroTitle: '了解您的診斷，探索您的選擇。',
+        heroDescription: '上傳您的醫療報告，根據最新臨床指南，獲得即時個人化的AI分析。',
+        heroBtn1: '上傳並分析',
+        heroBtn2: '了解運作方式',
+        tabUpload: '📤 上傳並分析',
+        tabChat: '💬 AI對話',
+        tabReport: '📥 下載報告',
+        uploadText: '將醫療文件拖放至此處',
+        uploadSubtext: 'PDF、JPG、PNG、Word — 病理報告、掃描、化驗結果',
+        analyzeBtnText: '✨ 生成AI分析報告',
+    },
+    es: {
+        navHome: 'Inicio',
+        navArticles: 'Artículos',
+        navInsurance: 'Seguro',
+        navLegal: 'Legal',
+        navSignIn: 'Iniciar sesión',
+        heroLabel: 'ORIENTACIÓN ONCOLÓGICA CON IA',
+        heroTitle: 'Entiende tu diagnóstico. Navega tus opciones.',
+        heroDescription: 'Sube tus informes médicos y obtén un análisis de IA personalizado e instantáneo, basado en las últimas guías clínicas.',
+        heroBtn1: 'Subir y analizar',
+        heroBtn2: 'Ver cómo funciona',
+        tabUpload: '📤 Subir y Analizar',
+        tabChat: '💬 Chat con IA',
+        tabReport: '📥 Descargar Informe',
+        uploadText: 'Arrastra tus archivos médicos aquí',
+        uploadSubtext: 'PDF, JPG, PNG, Word — informes de patología, imágenes, resultados de laboratorio',
+        analyzeBtnText: '✨ Generar informe de análisis IA',
+    }
+};
+
+window.currentLanguage = 'en';
+
+window.changeLanguage = function(lang) {
+    const t = translations[lang] || translations.en;
+    window.currentLanguage = lang;
+
+    const ids = [
+        'navHome','navArticles','navInsurance','navLegal','navSignIn',
+        'heroLabel','heroTitle','heroDescription','heroBtn1','heroBtn2',
+        'tabUpload','tabChat','tabReport',
+        'uploadText','uploadSubtext','analyzeBtnText'
+    ];
+
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && t[id] !== undefined) el.textContent = t[id];
+    });
+};
+
 // Language selector
 document.addEventListener('DOMContentLoaded', function() {
     const languageSelector = document.querySelector('.language-selector');
-    if (languageSelector && typeof changeLanguage !== 'undefined') {
+    if (languageSelector) {
         languageSelector.addEventListener('change', function(e) {
-            changeLanguage(e.target.value);
+            window.changeLanguage(e.target.value);
         });
     }
 });
