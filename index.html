@@ -11,959 +11,287 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <style>
-        /* Design System */
-        :root {
-            --blue: #A8D8EA;
-            --pink: #F4C2C2;
-            --blue-light: #EAF4FB;
-            --text-dark: #2D2D2D;
-            --text-gray: #666666;
-            --white: #FFFFFF;
-        }
-
-        /* AI Assessment Hero Section */
-        .ai-assessment-hero {
-            width: 100%;
-            background: linear-gradient(135deg, #EAF4FB 0%, #FDF0F0 100%);
-            padding: 60px 20px;
-        }
-
-        .hero-header {
-            text-align: center;
-            max-width: 960px;
-            margin: 0 auto 40px;
-        }
-
-        .hero-label {
-            font-size: 12px;
-            letter-spacing: 3px;
-            color: var(--blue);
-            font-weight: 700;
-            text-transform: uppercase;
-            margin: 0 0 12px 0;
-        }
-
-        .hero-heading {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin: 0 0 8px 0;
-            line-height: 1.3;
-        }
-
-        .hero-subheading {
-            font-size: 16px;
-            color: #666;
-            margin: 0;
-            line-height: 1.6;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .assessment-card-wrapper {
-            max-width: 960px;
-            margin: 0 auto;
-        }
-
-        .assessment-card {
-            background: var(--white);
-            border-radius: 20px;
-            box-shadow: 0 8px 40px rgba(168, 216, 234, 0.3);
-            padding: 40px 48px;
-            display: grid;
-            grid-template-columns: 60% 40%;
-            gap: 2rem;
-            align-items: center;
-            position: relative;
-            border-top: 4px solid;
-            border-image: linear-gradient(90deg, #A8D8EA, #F4C2C2) 1;
-        }
-
-        @media (max-width: 768px) {
-            .assessment-card {
-                grid-template-columns: 1fr;
-                padding: 24px;
-                gap: 1.5rem;
-            }
-
-            .hero-heading {
-                font-size: 24px;
-            }
-
-            .hero-subheading {
-                font-size: 14px;
-            }
-        }
-
-        .assessment-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            padding: 0.75rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-family: 'Inter', sans-serif;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(168, 216, 234, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .upload-zone {
-            border: 2px dashed var(--blue);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: #fafafa;
-        }
-
-        .upload-zone:hover {
-            background: var(--blue-light);
-            border-color: #7ec4d8;
-        }
-
-        .upload-zone input[type="file"] {
-            display: none;
-        }
-
-        .upload-zone-text {
-            margin: 0;
-            color: var(--text-dark);
-            font-weight: 500;
-            font-size: 1rem;
-        }
-
-        .upload-zone-subtext {
-            font-size: 0.85rem;
-            color: var(--text-gray);
-            margin-top: 0.5rem;
-        }
-
-        .file-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .file-chip {
-            background: var(--blue-light);
-            padding: 0.5rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-dark);
-        }
-
-        .file-chip button {
-            background: none;
-            border: none;
-            color: var(--text-dark);
-            cursor: pointer;
-            font-weight: 600;
-            padding: 0;
-            margin-left: 0.25rem;
-        }
-
-        .form-helper-text {
-            font-size: 0.8rem;
-            color: var(--text-gray);
-            margin-top: 0.25rem;
-        }
-
-        .submit-btn {
-            background: var(--blue);
-            color: var(--text-dark);
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-            margin-top: 1rem;
-        }
-
-        .submit-btn:hover {
-            background: #7ec4d8;
-            transform: scale(1.02);
-        }
-
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .assessment-illustration {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .doc-svg {
-            width: 100%;
-            max-width: 280px;
-            height: auto;
-        }
-
-        .error-alert {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
-            font-size: 0.95rem;
-        }
-
-        /* Two Column Feature Cards Section */
-        .features-two {
-            padding: 40px 20px;
-        }
-
-        .features-two .container {
-            max-width: 960px;
-            margin: 0 auto;
-        }
-
-        .feature-grid-two {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-        }
-
-        @media (max-width: 768px) {
-            .feature-grid-two {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-        }
-
-        .feature-box-small {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            padding: 28px 32px;
-            border-top: 3px solid var(--blue);
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-        }
-
-        .feature-box-small:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-box-small .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-box-small h3 {
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-
-        .feature-box-small p {
-            color: var(--text-gray);
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .coming-soon {
-            display: inline-block;
-            background: #ffc107;
-            color: #fff;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Loading State */
-        .loading-state {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .spinner {
-            border: 4px solid var(--blue-light);
-            border-top: 4px solid var(--blue);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            color: var(--text-dark);
-            font-weight: 500;
-        }
-
-        .loading-subtext {
-            font-size: 0.9rem;
-            color: var(--text-gray);
-            margin-top: 0.5rem;
-        }
-
-        /* Error Alert */
-        .error-alert {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
-            font-size: 0.95rem;
-        }
-
-        /* Report Display */
-        .report-container {
-            max-width: 960px;
-            margin: 3rem auto 0;
-            background: var(--white);
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-            padding: 40px;
-            display: none;
-        }
-
-        .report-container.show {
-            display: block;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .report-header {
-            border-bottom: 2px solid var(--blue-light);
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .report-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 0.25rem;
-        }
-
-        .report-date {
-            font-size: 0.85rem;
-            color: var(--text-gray);
-        }
-
-        .report-section {
-            margin-bottom: 2rem;
-            border-left: 3px solid var(--blue);
-            padding-left: 1.5rem;
-        }
-
-        .report-section-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 0.75rem;
-        }
-
-        .report-section-content {
-            color: var(--text-gray);
-            line-height: 1.6;
-        }
-
-        .current-stage-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .next-steps-list {
-            list-style: none;
-        }
-
-        .next-steps-list li {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-gray);
-        }
-
-        .step-badge {
-            background: var(--blue);
-            color: var(--white);
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .treatment-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .treatment-card {
-            background: #fafafa;
-            border: 1px solid #eee;
-            border-radius: 12px;
-            border-top: 3px solid var(--pink);
-            padding: 1.25rem;
-        }
-
-        .treatment-title {
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 0.75rem;
-        }
-
-        .risk-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .risk-low {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .risk-medium {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .risk-high {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .treatment-item {
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-gray);
-        }
-
-        .treatment-label {
-            font-weight: 600;
-            color: var(--text-dark);
-            display: inline;
-        }
-
-        .questions-list {
-            list-style: none;
-        }
-
-        .questions-list li {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-gray);
-        }
-
-        .warning-box {
-            background: #fff9e6;
-            border: 1px solid #ffd966;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .warning-box.hidden {
-            display: none;
-        }
-
-        .warning-title {
-            font-weight: 700;
-            color: #d9880d;
-            margin-bottom: 0.5rem;
-        }
-
-        .warning-item {
-            color: #856404;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .disclaimer {
-            font-size: 0.85rem;
-            color: var(--text-gray);
-            font-style: italic;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #eee;
-            line-height: 1.5;
-        }
-
-        .download-btn {
-            background: var(--white);
-            border: 2px solid var(--blue);
-            color: var(--blue);
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-            margin-top: 2rem;
-        }
-
-        .download-btn:hover {
-            background: var(--blue-light);
-        }
-    </style>
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
-        <div class="container">
+        <div class="container navbar-container">
             <div class="nav-brand">HAVI</div>
             <ul class="nav-links">
-                <li><a href="index.html" class="active" data-i18n="navHome">Home</a></li>
-                <li><a href="legal.html" data-i18n="navLegal">Legal</a></li>
-                <li><a href="auth.html" data-i18n="navSignIn">Sign in</a></li>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="articles.html">Articles</a></li>
+                <li><a href="insurance.html">Insurance</a></li>
+                <li><a href="legal.html">Legal</a></li>
+                <li><a href="#" class="sign-in-btn">Sign In</a></li>
                 <li>
-                    <select class="language-selector">
-                        <option value="en">English</option>
-                        <option value="zh-CN">简体中文</option>
-                        <option value="zh-TW">繁體中文</option>
-                        <option value="es">Español</option>
+                    <select class="language-selector" id="languageSelector" onchange="changeLanguage(this.value)">
+                        <option value="en">🌐 EN</option>
+                        <option value="es">ES</option>
+                        <option value="fr">FR</option>
+                        <option value="de">DE</option>
+                        <option value="zh">ZH</option>
                     </select>
                 </li>
             </ul>
+            <div class="mobile-menu-toggle" id="mobileMenuToggle">☰</div>
         </div>
     </nav>
 
-    <!-- AI Assessment Hero Section -->
-    <section class="ai-assessment-hero">
-        <!-- Hero Label and Heading -->
-        <div class="hero-header">
-            <p class="hero-label">AI CANCER ANALYSIS</p>
-            <h1 class="hero-heading">Evidence-based cancer guidance for confident decisions</h1>
-            <p class="hero-subheading">Personalized guidance, AI-assisted triage, and practical resources for patients and their families.</p>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <p class="hero-label">AI-POWERED CANCER GUIDANCE</p>
+                    <h1 class="hero-title">Understand your diagnosis. Navigate your options.</h1>
+                    <p class="hero-description">Upload your medical reports and get an instant, personalized AI analysis — based on the latest clinical guidelines.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="scrollToUpload()">Upload & Analyze</button>
+                        <button class="btn btn-secondary" onclick="scrollToHowItWorks()">See How It Works</button>
+                    </div>
+                </div>
+                <div class="hero-cards">
+                    <div class="status-card card-uploading">
+                        <div class="card-icon">📄</div>
+                        <p class="card-title">Medical Report</p>
+                        <p class="card-status">Uploading...</p>
+                    </div>
+                    <div class="status-card card-processing">
+                        <div class="card-icon">⚡</div>
+                        <p class="card-title">AI Analysis</p>
+                        <p class="card-status">Processing...</p>
+                    </div>
+                    <div class="status-card card-complete">
+                        <div class="card-icon">✓</div>
+                        <p class="card-title">Analysis Complete</p>
+                        <p class="card-status complete">Ready to view</p>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <!-- Assessment Card -->
-        <div class="assessment-card-wrapper">
-            <div class="assessment-card">
-                <!-- Left Column: Form -->
-                <div class="assessment-form">
-                    <!-- Upload Zone -->
+    <!-- Upload & Analyze Section -->
+    <section class="analyze-section" id="uploadSection">
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="upload">📤 Upload & Analyze</button>
+                <button class="tab-btn" data-tab="chat">💬 AI Chat</button>
+                <button class="tab-btn" data-tab="report">📥 Download Report</button>
+            </div>
+
+            <!-- Upload Tab -->
+            <div class="tab-content active" id="upload-tab">
+                <div class="upload-container">
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-icon">☁️</div>
+                        <p class="upload-text">Drop your medical files here</p>
+                        <p class="upload-subtext">PDF, JPG, PNG, Word — pathology reports, scans, lab results</p>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.doc" />
+                    </div>
+
+                    <div id="uploadedFiles" class="uploaded-files"></div>
+
                     <div class="form-group">
-                        <label for="fileInput">📁 Medical Documents / 医疗文件</label>
-                        <div class="upload-zone" id="uploadZone">
-                            <p class="upload-zone-text">Drag & drop files here, or click to browse</p>
-                            <p class="upload-zone-subtext">Supports PDF, JPG, PNG, Word (.docx)</p>
-                            <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                        <label for="userQuestion">Ask a specific question (optional)</label>
+                        <textarea id="userQuestion" placeholder="e.g. What are my treatment options for Stage II breast cancer?" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary full-width" id="analyzeBtn" onclick="analyzeReport()">✨ Generate AI Analysis Report</button>
+                    </div>
+
+                    <div id="analysisResult" class="analysis-result" style="display: none;">
+                        <h3>Analysis Report</h3>
+                        <div id="resultContent"></div>
+                        <button class="btn btn-secondary" onclick="downloadPDF()">Download as PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Chat Tab -->
+            <div class="tab-content" id="chat-tab">
+                <div class="chat-container">
+                    <div id="chatMessages" class="chat-messages">
+                        <div class="message bot-message">
+                            <p>Hello! I'm your AI cancer guidance assistant. I can help answer questions about your diagnosis, treatment options, and clinical guidelines. How can I assist you today?</p>
                         </div>
-                        <div class="file-chips" id="fileChips"></div>
                     </div>
-
-                    <!-- Question Input -->
-                    <div class="form-group">
-                        <label for="questionInput">Your question (optional)</label>
-                        <textarea id="questionInput" placeholder="e.g. What are my treatment options based on this report?"></textarea>
+                    <div class="chat-input-container">
+                        <input type="text" id="chatInput" placeholder="Ask me anything about cancer treatment and guidance...">
+                        <button class="btn btn-primary" onclick="sendMessage()">Send</button>
                     </div>
-
-                    <!-- Submit Button -->
-                    <button class="submit-btn" id="submitBtn">✨ Generate AI Report</button>
-
-                    <!-- Error Alert -->
-                    <div class="error-alert" id="errorAlert" style="display: none;"></div>
-                </div>
-
-                <!-- Right Column: Illustration -->
-                <div class="assessment-illustration">
-                    <svg class="doc-svg" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <filter id="glow">
-                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                                <feMerge>
-                                    <feMergeNode in="coloredBlur"/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
-                            </filter>
-                            <linearGradient id="docGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:#A8D8EA;stop-opacity:0.9" />
-                                <stop offset="100%" style="stop-color:#B8E0F0;stop-opacity:0.7" />
-                            </linearGradient>
-                        </defs>
-                        <!-- Glow circle -->
-                        <circle cx="100" cy="140" r="110" fill="none" stroke="#F4C2C2" stroke-width="2" opacity="0.3" filter="url(#glow)"/>
-                        <!-- Document -->
-                        <rect x="50" y="50" width="100" height="160" rx="8" fill="url(#docGradient)" filter="url(#glow)"/>
-                        <!-- Document lines -->
-                        <line x1="65" y1="75" x2="135" y2="75" stroke="#2D2D2D" stroke-width="2" opacity="0.5"/>
-                        <line x1="65" y1="95" x2="135" y2="95" stroke="#2D2D2D" stroke-width="1.5" opacity="0.4"/>
-                        <line x1="65" y1="110" x2="125" y2="110" stroke="#2D2D2D" stroke-width="1.5" opacity="0.4"/>
-                        <line x1="65" y1="125" x2="135" y2="125" stroke="#2D2D2D" stroke-width="1.5" opacity="0.4"/>
-                        <line x1="65" y1="140" x2="110" y2="140" stroke="#2D2D2D" stroke-width="1.5" opacity="0.4"/>
-                        <!-- AI Sparkles -->
-                        <g id="sparkle1">
-                            <circle cx="40" cy="60" r="4" fill="#F4C2C2" opacity="0.8"/>
-                            <line x1="40" y1="52" x2="40" y2="68" stroke="#F4C2C2" stroke-width="1.5" opacity="0.6"/>
-                            <line x1="32" y1="60" x2="48" y2="60" stroke="#F4C2C2" stroke-width="1.5" opacity="0.6"/>
-                        </g>
-                        <g id="sparkle2">
-                            <circle cx="160" cy="80" r="3" fill="#A8D8EA" opacity="0.8"/>
-                            <line x1="160" y1="74" x2="160" y2="86" stroke="#A8D8EA" stroke-width="1" opacity="0.6"/>
-                            <line x1="154" y1="80" x2="166" y2="80" stroke="#A8D8EA" stroke-width="1" opacity="0.6"/>
-                        </g>
-                        <g id="sparkle3">
-                            <circle cx="150" cy="200" r="3" fill="#F4C2C2" opacity="0.7"/>
-                            <line x1="150" y1="194" x2="150" y2="206" stroke="#F4C2C2" stroke-width="1" opacity="0.5"/>
-                            <line x1="144" y1="200" x2="156" y2="200" stroke="#F4C2C2" stroke-width="1" opacity="0.5"/>
-                        </g>
-                    </svg>
                 </div>
             </div>
 
-            <!-- Report Display Area -->
-            <div class="report-container" id="reportContainer"></div>
+            <!-- Download Report Tab -->
+            <div class="tab-content" id="report-tab">
+                <div class="report-container">
+                    <p>Your AI analysis reports will appear here. Once you've completed an analysis, you can download the comprehensive report in PDF format.</p>
+                    <button class="btn btn-primary" id="downloadReportBtn" style="display: none;" onclick="downloadPDF()">📥 Download Report</button>
+                    <p id="noReportMsg" class="info-message">No reports generated yet. Start by uploading your medical files.</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Hero Section (Kept for context) -->
-    <section class="hero" style="display: none;">
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="howItWorks">
         <div class="container">
-            <h1 class="hero-title" data-i18n="heroTitle">Evidence-based cancer guidance for confident decisions</h1>
-            <p class="hero-subtitle" data-i18n="heroSubtitle">Personalized guidance, AI-assisted triage, and practical resources for patients and their families.</p>
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Get evidence-based guidance in three simple steps</p>
+            
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">📄</div>
+                    <h3>Upload your reports</h3>
+                    <p>Securely upload your pathology reports, scans, and lab results</p>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">🧠</div>
+                    <h3>AI analyzes & matches guidelines</h3>
+                    <p>Our AI analyzes your data against the latest clinical guidelines</p>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">✓</div>
+                    <h3>Get your personalized report</h3>
+                    <p>Receive a clear, actionable report to discuss with your doctor</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Search Bar (Hidden) -->
-    <section class="search-section" style="display: none;">
+    <!-- Testimonials Section -->
+    <section class="testimonials">
         <div class="container">
-            <div class="search-bar">
-                <input type="text" id="searchInput" data-i18n="searchPlaceholder" placeholder="Search conditions, symptoms, or treatments" aria-label="Search">
-                <button class="search-btn" data-i18n="searchButton">Search</button>
-            </div>
-        </div>
-    </section>
+            <p class="testimonial-badge">Used by patients in 12+ countries</p>
+            <h2 class="section-title">Trusted by Patients and Families</h2>
+            <p class="section-subtitle">Join thousands who have found clarity and confidence in their cancer journey</p>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-quote">"HAVI helped me understand my diagnosis and gave me the confidence to have informed conversations with my oncologist."</p>
+                    <p class="testimonial-author">Sarah M.</p>
+                    <p class="testimonial-role">Breast Cancer Patient</p>
+                </div>
 
-    <!-- Feature Cards (Two Column) -->
-    <section class="features-two">
-        <div class="container">
-            <div class="feature-grid-two">
-                <div class="feature-box-small">
-                    <div class="feature-icon">🏥</div>
-                    <h3 data-i18n="featureHospital">Hospital Access</h3>
-                    <span class="coming-soon" data-i18n="comingSoon">Coming Soon</span>
-                    <p data-i18n="featureHospitalDesc">Connect to hospital appointment system.</p>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-quote">"As a caregiver for my wife, HAVI made complex medical information clear and accessible. Invaluable resource."</p>
+                    <p class="testimonial-author">James L.</p>
+                    <p class="testimonial-role">Family Caregiver</p>
                 </div>
-                <div class="feature-box-small">
-                    <div class="feature-icon">🔍</div>
-                    <h3 data-i18n="featureSearch">Search Cancer Information</h3>
-                    <p data-i18n="featureSearchDesc">Search conditions, symptoms, or treatments.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Recommended Articles -->
-    <section class="articles">
-        <div class="container">
-            <h2 class="section-title" data-i18n="articlesTitle">Recommended Articles</h2>
-            <div id="articlesContainer" class="articles-grid">
-                <div class="loading" data-i18n="loading">Loading articles...</div>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-quote">"I recommend HAVI to my patients. It empowers them with knowledge while respecting medical guidance."</p>
+                    <p class="testimonial-author">Dr. Maria Rodriguez</p>
+                    <p class="testimonial-role">Oncology Nurse</p>
+                </div>
             </div>
-            <div class="show-more-container">
-                <a href="articles.html" class="show-more-btn" data-i18n="showMore">Show More</a>
-            </div>
-        </div>
-    </section>
 
-    <!-- Health Insurance Products -->
-    <section class="insurance">
-        <div class="container">
-            <h2 class="section-title" data-i18n="insuranceTitle">Health Insurance Products</h2>
-            <p class="section-subtitle" data-i18n="insuranceSubtitle">Comprehensive coverage for your peace of mind</p>
-            <div class="insurance-grid">
-                <div class="insurance-card">
-                    <div class="insurance-logo">🛡️</div>
-                    <h3>MediCare Plus</h3>
-                    <p class="insurance-type">Critical Illness Insurance</p>
-                    <p class="insurance-desc">Comprehensive coverage for 100+ critical illnesses including all major cancers. Lump sum payout upon diagnosis with no waiting period.</p>
-                    <ul class="insurance-features">
-                        <li>✓ Up to $500,000 coverage</li>
-                        <li>✓ Cancer treatment support</li>
-                        <li>✓ 24/7 medical hotline</li>
-                    </ul>
-                    <button class="insurance-btn" data-i18n="learnMore" onclick="showInsuranceModal('MediCare Plus')">Learn More</button>
-                </div>
-                <div class="insurance-card featured">
-                    <div class="featured-badge">Popular</div>
-                    <div class="insurance-logo">💙</div>
-                    <h3>HealthGuard Premium</h3>
-                    <p class="insurance-type">Medical & Critical Illness</p>
-                    <p class="insurance-desc">All-in-one protection combining hospitalization, surgery, and critical illness coverage with cancer-specific benefits and second opinion services.</p>
-                    <ul class="insurance-features">
-                        <li>✓ Unlimited annual coverage</li>
-                        <li>✓ Cancer specialist access</li>
-                        <li>✓ Global treatment coverage</li>
-                    </ul>
-                    <button class="insurance-btn" data-i18n="learnMore" onclick="showInsuranceModal('HealthGuard Premium')">Learn More</button>
-                </div>
-                <div class="insurance-card">
-                    <div class="insurance-logo">🏥</div>
-                    <h3>CancerCare Shield</h3>
-                    <p class="insurance-type">Specialized Cancer Insurance</p>
-                    <p class="insurance-desc">Dedicated cancer insurance with coverage for diagnosis, treatment, and recovery. Includes immunotherapy and targeted therapy treatments.</p>
-                    <ul class="insurance-features">
-                        <li>✓ Cancer-specific coverage</li>
-                        <li>✓ Experimental treatments</li>
-                        <li>✓ Rehabilitation support</li>
-                    </ul>
-                    <button class="insurance-btn" data-i18n="learnMore" onclick="showInsuranceModal('CancerCare Shield')">Learn More</button>
+            <!-- Guidelines Section -->
+            <div class="guidelines-section">
+                <p class="guidelines-label">BASED ON GUIDELINES FROM</p>
+                <div class="guidelines-logos">
+                    <div class="guideline-item">WHO</div>
+                    <div class="guideline-item">NCCN</div>
+                    <div class="guideline-item">ESMO</div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Insurance Modal -->
-    <div id="insuranceModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeInsuranceModal()">&times;</span>
-            <h2 id="modalTitle">Insurance Details</h2>
-            <div id="modalBody">
-                <p>Loading insurance details...</p>
-            </div>
-            <div class="modal-actions">
-                <button class="modal-btn primary">Request Quote</button>
-                <button class="modal-btn secondary" onclick="closeInsuranceModal()">Close</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <p data-i18n="footerText">&copy; 2025 HAVI. Evidence-based cancer guidance platform.</p>
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>HAVI</h3>
+                <p>Evidence-based cancer guidance for confident decisions.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <a href="index.html">Home</a>
+                    <a href="articles.html">Articles</a>
+                </div>
+                <div class="footer-column">
+                    <a href="insurance.html">Insurance</a>
+                    <a href="legal.html">Legal</a>
+                    <a href="legal.html">Privacy</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 HAVI. All rights reserved.</p>
         </div>
     </footer>
 
+    <!-- Modal for Insurance Products (if needed) -->
+    <div id="insuranceModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeInsuranceModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script>
-        // ⚠️ MVP ONLY: API key entered by user, used client-side only.
-        // Move to backend proxy before production launch.
-
         // Set PDF.js worker
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-        // System Prompts for different languages
-        const SYSTEM_PROMPTS = {
-            en: `You are HAVI, an expert medical AI assistant specialized in oncology.
-You help cancer patients and their families understand medical reports and make confident, informed decisions.
-Analyze the provided medical documents (pathology reports, imaging results, lab tests, clinical notes) and generate a clear, compassionate, patient-friendly report.
+        // Scroll to upload section
+        function scrollToUpload() {
+            document.getElementById('uploadSection').scrollIntoView({ behavior: 'smooth' });
+        }
 
-IMPORTANT: Respond ONLY with a valid JSON object. No markdown, no explanation outside the JSON.
+        // Scroll to how it works
+        function scrollToHowItWorks() {
+            document.getElementById('howItWorks').scrollIntoView({ behavior: 'smooth' });
+        }
 
-Return this exact JSON structure:
-{
-  "language": "en",
-  "patientSummary": "Brief summary of what was analyzed and key findings",
-  "currentStage": "e.g. Stage IIA Breast Cancer",
-  "stageExplanation": "Plain language explanation of what this stage means",
-  "nextSteps": ["Step 1", "Step 2", "Step 3"],
-  "treatmentOptions": [
-    {
-      "name": "Treatment name",
-      "description": "What this treatment involves",
-      "expectedOutcome": "What results to expect",
-      "riskLevel": "Low",
-      "timeline": "e.g. 6 weeks"
-    }
-  ],
-  "questionsForDoctor": ["Question 1", "Question 2"],
-  "importantWarnings": ["Warning if any"],
-  "disclaimer": "This AI-generated report is based on clinical guidelines and the documents provided. It is for informational purposes only and does not constitute medical advice. Please consult your oncologist before making any medical decisions."
-}
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and tabs
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding tab
+                this.classList.add('active');
+                document.getElementById(tabName + '-tab').classList.add('active');
+            });
+        });
 
-riskLevel must be exactly one of: "Low", "Medium", "High"
-Be warm, clear, and avoid medical jargon. Write for a patient with no medical background.
-If the content is not a medical document, say so in patientSummary and ask for correct documents.`,
-            
-            'zh-CN': `你是HAVI，一位专注于肿瘤学的专业医疗AI助手。
-你帮助癌症患者和家属理解医疗报告，做出明智的决策。
-请分析提供的医疗文件，生成清晰、有同理心、患者易懂的报告。
-
-重要：只返回有效的JSON对象，不要任何markdown或JSON以外的文字。
-
-返回以下JSON结构：
-{
-  "language": "zh-CN",
-  "patientSummary": "对分析内容和关键发现的简要总结",
-  "currentStage": "例如：乳腺癌IIA期",
-  "stageExplanation": "用通俗语言解释这个阶段意味着什么",
-  "nextSteps": ["步骤1", "步骤2", "步骤3"],
-  "treatmentOptions": [
-    {
-      "name": "治疗方案名称",
-      "description": "该治疗方案的内容",
-      "expectedOutcome": "预期效果",
-      "riskLevel": "低",
-      "timeline": "例如：6周"
-    }
-  ],
-  "questionsForDoctor": ["问题1", "问题2"],
-  "importantWarnings": ["如有警告请填写"],
-  "disclaimer": "本报告由AI根据临床指南和所提供文件生成，仅供参考，不构成医疗建议。请在做出任何医疗决策前咨询您的肿瘤科医生。"
-}
-
-riskLevel必须是以下之一："低"、"中"、"高"
-语言要温暖、清晰，避免专业术语，用患者能理解的方式表达。`,
-            
-            'zh-TW': `你是HAVI，一位專注於腫瘤學的專業醫療AI助手。
-你幫助癌症患者和家屬理解醫療報告，做出明智的決策。
-請分析提供的醫療文件，生成清晰、有同理心、患者易懂的報告。
-
-重要：只返回有效的JSON物件，不要任何markdown或JSON以外的文字。
-
-返回以下JSON結構：
-{
-  "language": "zh-TW",
-  "patientSummary": "對分析內容和關鍵發現的簡要總結",
-  "currentStage": "例如：乳腺癌IIA期",
-  "stageExplanation": "用通俗語言解釋這個階段意味著什麼",
-  "nextSteps": ["步驟1", "步驟2", "步驟3"],
-  "treatmentOptions": [
-    {
-      "name": "治療方案名稱",
-      "description": "該治療方案的內容",
-      "expectedOutcome": "預期效果",
-      "riskLevel": "低",
-      "timeline": "例如：6周"
-    }
-  ],
-  "questionsForDoctor": ["問題1", "問題2"],
-  "importantWarnings": ["如有警告請填寫"],
-  "disclaimer": "本報告由AI根據臨床指南和所提供文件生成，僅供參考，不構成醫療建議。請在做出任何醫療決策前諮詢您的腫瘤科醫生。"
-}
-
-riskLevel必須是以下之一："低"、"中"、"高"
-語言要溫暖、清晰，避免專業術語，用患者能理解的方式表達。`,
-            
-            es: `Eres HAVI, un asistente médico de IA experto especializado en oncología.
-Ayudas a pacientes con cáncer y sus familias a comprender los informes médicos y tomar decisiones informadas y seguras.
-Analiza los documentos médicos proporcionados (informes de patología, resultados de imágenes, pruebas de laboratorio, notas clínicas) y genera un informe claro, compasivo y fácil de entender para el paciente.
-
-IMPORTANTE: Responde SOLO con un objeto JSON válido. Sin markdown, sin explicación fuera del JSON.
-
-Devuelve esta estructura JSON exacta:
-{
-  "language": "es",
-  "patientSummary": "Breve resumen de lo analizado y hallazgos clave",
-  "currentStage": "ej. Cáncer de Mama Etapa IIA",
-  "stageExplanation": "Explicación en lenguaje sencillo de lo que significa esta etapa",
-  "nextSteps": ["Paso 1", "Paso 2", "Paso 3"],
-  "treatmentOptions": [
-    {
-      "name": "Nombre del tratamiento",
-      "description": "En qué consiste este tratamiento",
-      "expectedOutcome": "Qué resultados esperar",
-      "riskLevel": "Bajo",
-      "timeline": "ej. 6 semanas"
-    }
-  ],
-  "questionsForDoctor": ["Pregunta 1", "Pregunta 2"],
-  "importantWarnings": ["Advertencia si existe"],
-  "disclaimer": "Este informe generado por IA se basa en guías clínicas y los documentos proporcionados. Es solo para fines informativos y no constituye asesoramiento médico. Por favor consulte a su oncólogo antes de tomar cualquier decisión médica."
-}
-
-riskLevel debe ser exactamente uno de: "Bajo", "Medio", "Alto"
-Sé cálido, claro y evita la jerga médica. Escribe para un paciente sin formación médica.
-Si el contenido no es un documento médico, indícalo en patientSummary y solicita documentos correctos.`
-        };
-
-        // State for uploaded files
-        let uploadedFiles = [];
-
-        // DOM Elements
+        // Upload zone functionality
         const uploadZone = document.getElementById('uploadZone');
         const fileInput = document.getElementById('fileInput');
-        const fileChips = document.getElementById('fileChips');
-        const questionInput = document.getElementById('questionInput');
-        const submitBtn = document.getElementById('submitBtn');
-        const errorAlert = document.getElementById('errorAlert');
-        const reportContainer = document.getElementById('reportContainer');
+        const uploadedFilesDiv = document.getElementById('uploadedFiles');
+        let uploadedFiles = [];
 
-        // Upload Zone Event Listeners
         uploadZone.addEventListener('click', () => fileInput.click());
+
         uploadZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            uploadZone.style.background = '#E8F4FB';
+            uploadZone.style.borderColor = '#7ec4d8';
+            uploadZone.style.background = '#EAF4FB';
         });
+
         uploadZone.addEventListener('dragleave', () => {
+            uploadZone.style.borderColor = '#A8D8EA';
             uploadZone.style.background = '#fafafa';
         });
+
         uploadZone.addEventListener('drop', (e) => {
             e.preventDefault();
+            uploadZone.style.borderColor = '#A8D8EA';
             uploadZone.style.background = '#fafafa';
             handleFiles(e.dataTransfer.files);
         });
@@ -972,14 +300,13 @@ Si el contenido no es un documento médico, indícalo en patientSummary y solici
             handleFiles(e.target.files);
         });
 
-        // Handle file uploads
         function handleFiles(files) {
             for (let file of files) {
                 if (isValidFile(file)) {
                     uploadedFiles.push(file);
                 }
             }
-            renderFileChips();
+            renderUploadedFiles();
         }
 
         function isValidFile(file) {
@@ -987,261 +314,101 @@ Si el contenido no es un documento médico, indícalo en patientSummary y solici
             return validTypes.includes(file.type);
         }
 
-        function renderFileChips() {
-            fileChips.innerHTML = '';
-            uploadedFiles.forEach((file, index) => {
-                const chip = document.createElement('div');
-                chip.className = 'file-chip';
-                chip.innerHTML = `${file.name}<button onclick="removeFile(${index})">×</button>`;
-                fileChips.appendChild(chip);
-            });
+        function renderUploadedFiles() {
+            uploadedFilesDiv.innerHTML = '';
+            if (uploadedFiles.length > 0) {
+                const fileList = document.createElement('div');
+                fileList.className = 'file-list';
+                uploadedFiles.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <span>${file.name}</span>
+                        <button onclick="removeFile(${index})">✕</button>
+                    `;
+                    fileList.appendChild(fileItem);
+                });
+                uploadedFilesDiv.appendChild(fileList);
+            }
         }
 
         window.removeFile = function(index) {
             uploadedFiles.splice(index, 1);
-            renderFileChips();
+            renderUploadedFiles();
         };
 
-        // Extract text from files
-        async function extractFileContent(file) {
-            if (file.type === 'application/pdf') {
-                return await extractPdfText(file);
-            } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === 'application/msword') {
-                return await extractDocxText(file);
-            } else if (file.type.startsWith('image/')) {
-                return await extractImageBase64(file);
-            }
-            return null;
-        }
-
-        // Extract PDF text
-        async function extractPdfText(file) {
-            const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-            let text = '';
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const textContent = await page.getTextContent();
-                text += textContent.items.map(item => item.str).join('') + '\n';
-            }
-            return { type: 'text', content: text };
-        }
-
-        // Extract DOCX text
-        async function extractDocxText(file) {
-            const result = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
-            return { type: 'text', content: result.value };
-        }
-
-        // Extract image as base64
-        async function extractImageBase64(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const base64 = reader.result.split(',')[1];
-                    const mimeType = file.type;
-                    resolve({ type: 'image', mimeType, data: base64 });
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // Validate inputs
-        function validateInputs() {
-            showError('');
+        async function analyzeReport() {
+            const userQuestion = document.getElementById('userQuestion').value;
+            const analyzeBtn = document.getElementById('analyzeBtn');
             
-            if (uploadedFiles.length === 0 && !questionInput.value.trim()) {
-                showError('Please upload at least one document or enter your question.');
-                return false;
+            if (uploadedFiles.length === 0 && !userQuestion) {
+                alert('Please upload at least one file or enter a question.');
+                return;
             }
-            
-            return true;
-        }
 
-        // Show error
-        function showError(message) {
-            if (message) {
-                errorAlert.textContent = message;
-                errorAlert.style.display = 'block';
-            } else {
-                errorAlert.style.display = 'none';
-            }
-        }
-
-        // Show loading state
-        function showLoading() {
-            submitBtn.disabled = true;
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; display: inline-block; margin-right: 0.5rem;"></div> Analyzing...';
-            return originalText;
-        }
-
-        // Hide loading state
-        function hideLoading(originalText) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalText;
-        }
-
-        // Submit form
-        submitBtn.addEventListener('click', async () => {
-            if (!validateInputs()) return;
-
-            const originalText = showLoading();
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '⏳ Analyzing...';
 
             try {
-                // Extract content from files
-                const fileParts = [];
-                for (let file of uploadedFiles) {
-                    const content = await extractFileContent(file);
-                    if (content) {
-                        if (content.type === 'text') {
-                            fileParts.push({ text: `\n\n[File: ${file.name}]\n${content.content}` });
-                        } else if (content.type === 'image') {
-                            fileParts.push({ inline_data: { mime_type: content.mimeType, data: content.data } });
-                        }
-                    }
-                }
-
-                // Build request - get language from navbar
-                const navbarLanguageSelector = document.querySelector('.language-selector');
-                const language = navbarLanguageSelector ? navbarLanguageSelector.value : 'en';
-                const systemPrompt = SYSTEM_PROMPTS[language];
-                const userQuestion = questionInput.value.trim();
-                
-                const parts = [
-                    { text: systemPrompt }
-                ];
-
-                if (userQuestion) {
-                    parts.push({ text: `\n\nUser Question: ${userQuestion}` });
-                }
-
-                parts.push(...fileParts);
-
-                // Call Vercel API proxy
-                const response = await fetch('/api/analyze', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ parts: parts })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Something went wrong. Please try again later.');
-                }
-
-                const data = await response.json();
-                const responseText = data.candidates[0].content.parts[0].text;
-
-                // Parse JSON response
-                let report;
-                try {
-                    report = JSON.parse(responseText);
-                } catch (e) {
-                    showError('Could not parse AI response. Please try again.');
-                    hideLoading(originalText);
-                    return;
-                }
-
-                // Render report
-                renderReport(report);
-                hideLoading(originalText);
+                // In production, send to backend API
+                alert('Analysis feature coming soon! This will process your medical documents using AI.');
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = '✨ Generate AI Analysis Report';
             } catch (error) {
-                showError(error.message || 'An error occurred. Please try again.');
-                hideLoading(originalText);
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = '✨ Generate AI Analysis Report';
             }
-        });
-
-        // Render report
-        function renderReport(report) {
-            const now = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-            
-            const html = `
-                <div class="report-header">
-                    <div class="report-title">🏥 HAVI AI Cancer Analysis Report</div>
-                    <div class="report-date">${now}</div>
-                </div>
-
-                <div class="report-section">
-                    <div class="report-section-title">📋 Patient Summary</div>
-                    <div class="report-section-content">${report.patientSummary}</div>
-                </div>
-
-                <div class="report-section">
-                    <div class="report-section-title">🏥 Current Stage</div>
-                    <div class="current-stage-title">${report.currentStage}</div>
-                    <div class="report-section-content">${report.stageExplanation}</div>
-                </div>
-
-                <div class="report-section">
-                    <div class="report-section-title">✅ What To Do Next</div>
-                    <ol class="next-steps-list">
-                        ${report.nextSteps.map((step, i) => `
-                            <li>
-                                <span class="step-badge">${i + 1}</span>
-                                <span>${step}</span>
-                            </li>
-                        `).join('')}
-                    </ol>
-                </div>
-
-                <div class="report-section">
-                    <div class="report-section-title">💊 Treatment Options</div>
-                    <div class="treatment-grid">
-                        ${report.treatmentOptions.map(option => `
-                            <div class="treatment-card">
-                                <div class="treatment-title">${option.name}</div>
-                                <span class="risk-badge risk-${getRiskClass(option.riskLevel)}">${option.riskLevel}</span>
-                                <div class="treatment-item"><span class="treatment-label">Treatment:</span> ${option.description}</div>
-                                <div class="treatment-item"><span class="treatment-label">Expected Outcome:</span> ${option.expectedOutcome}</div>
-                                <div class="treatment-item"><span class="treatment-label">Timeline:</span> ${option.timeline}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <div class="report-section">
-                    <div class="report-section-title">❓ Questions to Ask Your Doctor</div>
-                    <ul class="questions-list">
-                        ${report.questionsForDoctor.map(q => `<li>❓ ${q}</li>`).join('')}
-                    </ul>
-                </div>
-
-                ${report.importantWarnings && report.importantWarnings.length > 0 ? `
-                    <div class="warning-box">
-                        <div class="warning-title">⚠️ Important Warnings</div>
-                        ${report.importantWarnings.map(w => `<div class="warning-item">• ${w}</div>`).join('')}
-                    </div>
-                ` : ''}
-
-                <div class="disclaimer">
-                    ${report.disclaimer}
-                </div>
-
-                <button class="download-btn" onclick="downloadReportPDF()">⬇️ Download Report (PDF)</button>
-            `;
-
-            reportContainer.innerHTML = html;
-            reportContainer.classList.add('show');
-            reportContainer.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function getRiskClass(level) {
-            if (level === 'Low' || level === '低') return 'low';
-            if (level === 'Medium' || level === 'High' || level === '中' || level === '高') return 'medium';
-            return 'low';
+        function sendMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const chatMessages = document.getElementById('chatMessages');
+            const message = chatInput.value.trim();
+
+            if (!message) return;
+
+            // Add user message
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'message user-message';
+            userMsgDiv.innerHTML = `<p>${message}</p>`;
+            chatMessages.appendChild(userMsgDiv);
+
+            chatInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simulate bot response
+            setTimeout(() => {
+                const botMsgDiv = document.createElement('div');
+                botMsgDiv.className = 'message bot-message';
+                botMsgDiv.innerHTML = `<p>Thank you for your question about cancer guidance. In production, this will connect to our AI system for personalized responses.</p>`;
+                chatMessages.appendChild(botMsgDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 500);
         }
 
-        // Download report as PDF
-        window.downloadReportPDF = function() {
-            const element = reportContainer;
-            const opt = {
-                margin: 15,
-                filename: 'HAVI_Report_' + new Date().toISOString().split('T')[0] + '.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
+        function downloadPDF() {
+            alert('PDF download feature coming soon!');
+        }
+
+        // Insurance functions
+        function showInsuranceModal(productName) {
+            const modal = document.getElementById('insuranceModal');
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `<p>Details for ${productName}</p>`;
+            modal.style.display = 'block';
+        }
+
+        function closeInsuranceModal() {
+            document.getElementById('insuranceModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('insuranceModal');
+            if (event.target === modal) {
+                closeInsuranceModal();
+            }
         };
     </script>
 </body>

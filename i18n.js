@@ -65,7 +65,56 @@ const translations = {
         legalTitle: "Legal Information",
         legalDisclaimerTitle: "Platform Disclaimer",
         legalPrivacyTitle: "Privacy Policy",
-        legalComplianceTitle: "Regulatory Compliance"
+        legalComplianceTitle: "Regulatory Compliance",
+        
+        // New Homepage Sections
+        heroLabel: "AI-POWERED CANCER GUIDANCE",
+        heroTitle2: "Understand your diagnosis. Navigate your options.",
+        heroDescription: "Upload your medical reports and get an instant, personalized AI analysis — based on the latest clinical guidelines.",
+        uploadAnalyzeBtn: "Upload & Analyze",
+        seeHowItWorksBtn: "See How It Works",
+        
+        // How It Works Section
+        howItWorksTitle: "How It Works",
+        howItWorksSubtitle: "Get evidence-based guidance in three simple steps",
+        step1Title: "Upload your reports",
+        step1Desc: "Securely upload your pathology reports, scans, and lab results",
+        step2Title: "AI analyzes & matches guidelines",
+        step2Desc: "Our AI analyzes your data against the latest clinical guidelines",
+        step3Title: "Get your personalized report",
+        step3Desc: "Receive a clear, actionable report to discuss with your doctor",
+        
+        // Testimonials Section
+        testimonialsBadge: "Used by patients in 12+ countries",
+        testimonialsSectionTitle: "Trusted by Patients and Families",
+        testimonialsSubtitle: "Join thousands who have found clarity and confidence in their cancer journey",
+        testimonial1: "HAVI helped me understand my diagnosis and gave me the confidence to have informed conversations with my oncologist.",
+        testimonial1Author: "Sarah M.",
+        testimonial1Role: "Breast Cancer Patient",
+        testimonial2: "As a caregiver for my wife, HAVI made complex medical information clear and accessible. Invaluable resource.",
+        testimonial2Author: "James L.",
+        testimonial2Role: "Family Caregiver",
+        testimonial3: "I recommend HAVI to my patients. It empowers them with knowledge while respecting medical guidance.",
+        testimonial3Author: "Dr. Maria Rodriguez",
+        testimonial3Role: "Oncology Nurse",
+        
+        // Guidelines Section
+        guidelinesLabel: "BASED ON GUIDELINES FROM",
+        
+        // Upload & Analyze Section
+        uploadTabLabel: "Upload & Analyze",
+        chatTabLabel: "AI Chat",
+        downloadReportTabLabel: "Download Report",
+        dropFilesHere: "Drop your medical files here",
+        supportedFormats: "PDF, JPG, PNG, Word — pathology reports, scans, lab results",
+        askQuestion: "Ask a specific question (optional)",
+        askQuestionPlaceholder: "e.g. What are my treatment options for Stage II breast cancer?",
+        generateReportBtn: "Generate AI Analysis Report",
+        aiChatPlaceholder: "Ask me anything about cancer treatment and guidance...",
+        sendBtn: "Send",
+        reportDownloadMsg: "Your AI analysis reports will appear here. Once you've completed an analysis, you can download the comprehensive report in PDF format.",
+        noReportsYet: "No reports generated yet. Start by uploading your medical files.",
+        downloadReportBtn2: "Download Report"
     },
     
     "zh-CN": {

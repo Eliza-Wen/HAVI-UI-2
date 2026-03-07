@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Products - HAVI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="i18n.js"></script>
+    <style>
+        .insurance-page {
+            padding: 60px 20px 80px;
+            background: white;
+        }
+
+        .insurance-page-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 16px;
+        }
+
+        .insurance-page-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .insurance-products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .insurance-product {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #A8D8EA;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .insurance-product:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .insurance-product.featured {
+            border-color: #F4C2C2;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FDF0F0 100%);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: #F4C2C2;
+            color: #2D2D2D;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .product-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .product-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 8px;
+        }
+
+        .product-category {
+            font-size: 14px;
+            color: #A8D8EA;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .product-desc {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+        .product-highlights {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .highlight-list {
+            list-style: none;
+        }
+
+        .highlight-list li {
+            color: #555;
+            font-size: 14px;
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-list li::before {
+            content: '✓';
+            color: #A8D8EA;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .product-price {
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #EAF4FB;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .price-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2D2D2D;
+        }
+
+        .price-period {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .product-btn {
+            width: 100%;
+            padding: 12px;
+            background: #A8D8EA;
+            color: #2D2D2D;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .product-btn:hover {
+            background: #7ec4d8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(168, 216, 234, 0.4);
+        }
+
+        .comparison-section {
+            background: #f9f9f9;
+            padding: 60px 20px;
+            margin-top: 80px;
+        }
+
+        .comparison-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 48px;
+        }
+
+        .comparison-table {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: #EAF4FB;
+            color: #2D2D2D;
+            padding: 20px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 15px;
+            border-bottom: 2px solid #A8D8EA;
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table :nth-child(odd) {
+            background: #f9f9f9;
+        }
+
+        .checkmark {
+            color: #10b981;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .faq-section {
+            background: white;
+            padding: 60px 20px;
+            margin-top: 60px;
+        }
+
+        .faq-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 48px;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            background: #fafafa;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2D2D2D;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #f0f0f0;
+        }
+
+        .faq-toggle {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding: 20px;
+        }
+
+        .faq-text {
+            color: #666;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1024px) {
+            .insurance-products-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .insurance-page {
+                padding: 40px 20px 60px;
+            }
+
+            .insurance-page-title {
+                font-size: 2rem;
+            }
+
+            .insurance-page-subtitle {
+                font-size: 16px;
+                margin-bottom: 40px;
+            }
+
+            .insurance-products-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .insurance-product {
+                padding: 24px;
+            }
+
+            .comparison-section {
+                padding: 40px 20px;
+                margin-top: 60px;
+            }
+
+            .comparison-title {
+                font-size: 1.8rem;
+                margin-bottom: 32px;
+            }
+
+            .comparison-table table {
+                font-size: 12px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 12px;
+            }
+
+            .faq-section {
+                padding: 40px 20px;
+            }
+
+            .faq-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <div class="nav-brand">HAVI</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="articles.html">Articles</a></li>
+                <li><a href="insurance.html" class="active">Insurance</a></li>
+                <li><a href="legal.html">Legal</a></li>
+                <li><a href="#" class="sign-in-btn">Sign In</a></li>
+                <li>
+                    <select class="language-selector" id="languageSelector">
+                        <option value="en">🌐 EN</option>
+                        <option value="es">ES</option>
+                        <option value="fr">FR</option>
+                        <option value="de">DE</option>
+                        <option value="zh">ZH</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="insurance-page">
+        <div class="container">
+            <h1 class="insurance-page-title">Health Insurance Products</h1>
+            <p class="insurance-page-subtitle">Choose the right coverage for your peace of mind and health security during your cancer journey</p>
+
+            <!-- Products Grid -->
+            <div class="insurance-products-grid">
+                <!-- Product 1: MediCare Plus -->
+                <div class="insurance-product">
+                    <div class="product-icon">🛡️</div>
+                    <h3 class="product-name">MediCare Plus</h3>
+                    <p class="product-category">Critical Illness Insurance</p>
+                    <p class="product-desc">Comprehensive coverage for 100+ critical illnesses including all major cancers. Lump sum payout upon diagnosis with no waiting period.</p>
+                    
+                    <div class="product-highlights">
+                        <ul class="highlight-list">
+                            <li>Coverage up to $500,000</li>
+                            <li>Cancer treatment support</li>
+                            <li>24/7 medical hotline</li>
+                            <li>Second opinion services</li>
+                        </ul>
+                    </div>
+
+                    <div class="product-price">
+                        <div class="price-label">Starting from</div>
+                        <div class="price">$150</div>
+                        <div class="price-period">/month</div>
+                    </div>
+
+                    <button class="product-btn" onclick="learnMore('MediCare Plus')">Learn More</button>
+                </div>
+
+                <!-- Product 2: HealthGuard Premium (Featured) -->
+                <div class="insurance-product featured">
+                    <div class="product-badge">Popular</div>
+                    <div class="product-icon">💙</div>
+                    <h3 class="product-name">HealthGuard Premium</h3>
+                    <p class="product-category">Medical & Critical Illness</p>
+                    <p class="product-desc">All-in-one protection combining hospitalization, surgery, and critical illness coverage with cancer-specific benefits.</p>
+                    
+                    <div class="product-highlights">
+                        <ul class="highlight-list">
+                            <li>Unlimited annual coverage</li>
+                            <li>Cancer specialist access</li>
+                            <li>Global treatment coverage</li>
+                            <li>Experimental therapy support</li>
+                        </ul>
+                    </div>
+
+                    <div class="product-price">
+                        <div class="price-label">Starting from</div>
+                        <div class="price">$280</div>
+                        <div class="price-period">/month</div>
+                    </div>
+
+                    <button class="product-btn" onclick="learnMore('HealthGuard Premium')">Learn More</button>
+                </div>
+
+                <!-- Product 3: CancerCare Shield -->
+                <div class="insurance-product">
+                    <div class="product-icon">🏥</div>
+                    <h3 class="product-name">CancerCare Shield</h3>
+                    <p class="product-category">Specialized Cancer Insurance</p>
+                    <p class="product-desc">Dedicated cancer insurance with comprehensive coverage for diagnosis, treatment, and recovery support.</p>
+                    
+                    <div class="product-highlights">
+                        <ul class="highlight-list">
+                            <li>Coverage up to $1,000,000</li>
+                            <li>Immunotherapy coverage</li>
+                            <li>Clinical trial support</li>
+                            <li>Rehabilitation care</li>
+                        </ul>
+                    </div>
+
+                    <div class="product-price">
+                        <div class="price-label">Starting from</div>
+                        <div class="price">$200</div>
+                        <div class="price-period">/month</div>
+                    </div>
+
+                    <button class="product-btn" onclick="learnMore('CancerCare Shield')">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Section -->
+    <div class="comparison-section">
+        <div class="container">
+            <h2 class="comparison-title">Compare Our Plans</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>MediCare Plus</th>
+                            <th>HealthGuard Premium</th>
+                            <th>CancerCare Shield</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Coverage Amount</strong></td>
+                            <td>Up to $500K</td>
+                            <td>Unlimited</td>
+                            <td>Up to $1M</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hospitalization</strong></td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Critical Illness</strong></td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cancer Specialist Access</strong></td>
+                            <td>Limited</td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Immunotherapy</strong></td>
+                            <td>Partial</td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Global Coverage</strong></td>
+                            <td>Domestic</td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Second Opinion</strong></td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>24/7 Support</strong></td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+        <div class="container">
+            <h2 class="faq-title">Frequently Asked Questions</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>What conditions are covered?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-text">All our plans cover 100+ critical illnesses including all major types of cancer, heart disease, kidney failure, and more. Each plan has specific coverage details outlined in the policy documents.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Is there a waiting period?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-text">MediCare Plus offers lump sum payout with no waiting period. Other plans may have standard waiting periods as per policy terms. Please read the policy documents or contact us for details.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How do I claim?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-text">Claims can be filed through our online portal or by contacting our 24/7 support team. Most claims are processed within 7-10 business days. Required documents include medical reports and diagnosis confirmation.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Can I switch plans?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-text">Yes, you can switch between plans at any time. Your coverage will be adjusted accordingly, and there are no penalties for switching. Contact our team to discuss your options.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>What about pre-existing conditions?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-text">Coverage for pre-existing conditions depends on the specific plan and policy terms. We recommend discussing your medical history with our team to find the best option for you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>HAVI</h3>
+                <p>Evidence-based cancer guidance for confident decisions.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <a href="index.html">Home</a>
+                    <a href="articles.html">Articles</a>
+                </div>
+                <div class="footer-column">
+                    <a href="insurance.html">Insurance</a>
+                    <a href="legal.html">Legal</a>
+                    <a href="legal.html">Privacy</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 HAVI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle FAQ items
+        function toggleFAQ(element) {
+            const faqItem = element.parentElement;
+            const allItems = document.querySelectorAll('.faq-item');
+            
+            allItems.forEach(item => {
+                if (item !== faqItem) {
+                    item.classList.remove('active');
+                }
+            });
+            
+            faqItem.classList.toggle('active');
+        }
+
+        // Learn more button
+        function learnMore(productName) {
+            alert(`Thank you for your interest in ${productName}! Our team will contact you shortly with more information.`);
+        }
+    </script>
+</body>
+</html>
