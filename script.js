@@ -253,15 +253,34 @@ window.sendStarterMessage = function(btn) {
 };
 
 window.shareWithDoctor = function() {
-    const url = window.location.href;
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(() => {
-            alert('Link copied to clipboard! Share it with your doctor.');
-        }).catch(() => {
-            prompt('Copy this link to share with your doctor:', url);
-        });
-    } else {
-        prompt('Copy this link to share with your doctor:', url);
+    const panel = document.getElementById('shareLinkPanel');
+    const input = document.getElementById('shareLinkInput');
+    if (!panel || !input) return;
+    input.value = window.location.href;
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    if (panel.style.display === 'block') {
+        input.select();
+        input.setSelectionRange(0, 99999);
+    }
+};
+
+window.copyShareLink = function() {
+    const input = document.getElementById('shareLinkInput');
+    if (!input) return;
+    input.select();
+    input.setSelectionRange(0, 99999);
+    let copied = false;
+    try {
+        copied = document.execCommand('copy');
+    } catch(e) {}
+    if (!copied && navigator.clipboard) {
+        navigator.clipboard.writeText(input.value).catch(() => {});
+        copied = true;
+    }
+    const btn = document.getElementById('copyShareBtn');
+    if (btn) {
+        btn.textContent = '✓ Copied!';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
     }
 };
 
@@ -790,25 +809,36 @@ function getRiskClass(level) {
 
 window.downloadReportPDF = function() {
     const element = document.getElementById('reportContainer');
-    if (!element) {
-        alert('No report to download');
+    if (!element || !element.innerHTML.trim()) {
+        alert('No report to download. Please generate a report first.');
         return;
     }
-    
     if (typeof html2pdf === 'undefined') {
         alert('PDF library not loaded');
         return;
     }
-    
+
+    // html2canvas cannot capture off-screen elements.
+    // Temporarily move the container to top-left (behind page content) so it renders correctly.
+    const origStyle = element.getAttribute('style') || '';
+    element.setAttribute('style', 'position:fixed;left:0;top:0;width:800px;background:white;z-index:-1;');
+
     const opt = {
-        margin: 15,
+        margin: [15, 15, 15, 15],
         filename: 'HAVI_Report_' + new Date().toISOString().split('T')[0] + '.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
+        html2canvas: { scale: 2, useCORS: true, allowTaint: true, scrollX: 0, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
-    
-    html2pdf().set(opt).from(element).save();
+
+    html2pdf().set(opt).from(element).save().then(function() {
+        // Restore off-screen positioning after PDF is saved
+        element.setAttribute('style', origStyle);
+    }).catch(function(err) {
+        element.setAttribute('style', origStyle);
+        console.error('PDF generation error:', err);
+        alert('PDF generation failed. Please try again.');
+    });
 };
 
 // ============================================

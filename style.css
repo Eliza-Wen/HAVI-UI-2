@@ -1603,6 +1603,60 @@ body {
     transform: translateY(-2px);
 }
 
+/* Share link panel */
+.share-link-panel {
+    margin-top: 14px;
+    background: var(--blue-light);
+    border: 1.5px solid var(--blue);
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.share-link-label {
+    font-size: 13px;
+    color: var(--text-dark);
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.share-link-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.share-link-input {
+    flex: 1;
+    padding: 9px 12px;
+    border: 1px solid #ccd;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    background: white;
+    color: var(--text-dark);
+    outline: none;
+    min-width: 0;
+}
+
+.btn-copy-link {
+    padding: 9px 18px;
+    background: linear-gradient(135deg, var(--blue), var(--pink));
+    color: var(--text-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-copy-link:hover {
+    opacity: 0.85;
+}
+
 /* ============================================
    CHAT — STARTER CHIPS & SEND BUTTON
    ============================================ */

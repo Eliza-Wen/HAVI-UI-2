@@ -217,6 +217,14 @@
                             <button class="btn-download-report" onclick="downloadReportPDF()">⬇ Download PDF Report</button>
                             <button class="btn-share-report" onclick="shareWithDoctor()">Share with Doctor</button>
                         </div>
+                        <!-- Share link panel — shown when Share is clicked -->
+                        <div id="shareLinkPanel" class="share-link-panel" style="display:none;">
+                            <p class="share-link-label">Copy this link to share with your doctor:</p>
+                            <div class="share-link-row">
+                                <input type="text" id="shareLinkInput" class="share-link-input" readonly />
+                                <button id="copyShareBtn" class="btn-copy-link" onclick="copyShareLink()">Copy</button>
+                            </div>
+                        </div>
                     </div>
                     <!-- Hidden full report for PDF export -->
                     <div id="reportContainer" style="position:absolute;left:-9999px;top:0;width:800px;"></div>
