@@ -818,30 +818,42 @@ window.downloadReportPDF = function() {
         return;
     }
 
-    // html2canvas cannot capture elements at left:-9999px (off-screen / behind stacking context).
-    // Solution: clone the report node, place it in normal document flow at the end of <body>
-    // (html2canvas will capture it correctly), then remove it after the PDF is saved.
+    // html2canvas captures the FULL document and crops to the element's bounding rect.
+    // If the element is far down the page (left:-9999px or appended at bottom of body),
+    // the crop starts with a huge blank area before the content.
+    // Fix: use position:fixed top:0 left:0 so bounding rect starts at (0,0).
+    // opacity:0.01 keeps it invisible to the user but html2canvas can still capture it.
     const clone = source.cloneNode(true);
     clone.removeAttribute('id');
     clone.style.cssText = [
-        'position:relative',
+        'position:fixed',
+        'top:0',
+        'left:0',
         'width:794px',
-        'max-width:794px',
         'background:#ffffff',
-        'padding:24px',
-        'margin:0 auto',
-        'font-family:Inter,sans-serif',
+        'padding:32px 40px',
+        'font-family:Inter,Arial,sans-serif',
         'font-size:14px',
         'color:#1a1a2e',
-        'box-sizing:border-box'
+        'box-sizing:border-box',
+        'z-index:999999',
+        'opacity:0.01',
+        'pointer-events:none'
     ].join(';');
     document.body.appendChild(clone);
 
     const opt = {
-        margin: [12, 12, 12, 12],
+        margin: [10, 10, 10, 10],
         filename: 'HAVI_Report_' + new Date().toISOString().split('T')[0] + '.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, allowTaint: true, logging: false },
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            scrollX: 0,
+            scrollY: 0
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
