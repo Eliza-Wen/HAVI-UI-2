@@ -31,15 +31,15 @@
     box-shadow: 0 1px 4px rgba(0,0,0,.06);
   }
   .top-bar-logo {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
-    color: #1a1a2e;
+    background: linear-gradient(90deg, #A8D8EA 0%, #F4C2C2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    letter-spacing: .02em;
   }
-  .top-bar-logo span { color: #A8D8EA; }
   .top-bar-actions { display: flex; gap: 10px; align-items: center; }
   .btn-print {
     background: linear-gradient(135deg, #A8D8EA, #8BBFD4);
@@ -262,7 +262,7 @@
 
 <!-- Top bar -->
 <div class="top-bar">
-  <a class="top-bar-logo" href="/">H<span>A</span>VI</a>
+  <a class="top-bar-logo" href="/">HAVI</a>
   <div class="top-bar-actions">
     <a class="btn-home" href="/">← Back to HAVI</a>
     <button class="btn-print" onclick="window.print()">⬇ Save as PDF</button>
@@ -281,6 +281,7 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
 <script>
 (function() {
   function eh(s) {
@@ -406,7 +407,15 @@
       showError('No report data found in this link. Please go back to HAVI and generate a new report.');
       return;
     }
-    var json = decodeURIComponent(escape(atob(encoded)));
+    // Try LZ-string first (compressed format), fall back to btoa (legacy)
+    var json = null;
+    if (typeof LZString !== 'undefined') {
+      json = LZString.decompressFromEncodedURIComponent(encoded);
+    }
+    if (!json) {
+      try { json = decodeURIComponent(escape(atob(encoded))); } catch(e2) {}
+    }
+    if (!json) throw new Error('Could not decompress report data');
     var report = JSON.parse(json);
     if (!report || typeof report !== 'object') throw new Error('Invalid report data');
     renderReport(report);

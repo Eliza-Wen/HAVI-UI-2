@@ -25,7 +25,16 @@ function loadReportFromUrl() {
         const encoded = params.get('report');
         if (!encoded) return;
 
-        const json = decodeURIComponent(escape(atob(encoded)));
+        // Try LZ-string first (new compressed format), fall back to btoa (legacy)
+        let json;
+        if (typeof LZString !== 'undefined') {
+            json = LZString.decompressFromEncodedURIComponent(encoded);
+        }
+        if (!json) {
+            // Legacy btoa fallback
+            try { json = decodeURIComponent(escape(atob(encoded))); } catch(e2) {}
+        }
+        if (!json) return;
         const report = JSON.parse(json);
         if (!report || typeof report !== 'object') return;
 
@@ -299,7 +308,13 @@ window.closeShareModal = function() {
 
 function getShareUrl() {
     try {
-        var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(window._lastReport))));
+        var json = JSON.stringify(window._lastReport);
+        var encoded;
+        if (typeof LZString !== 'undefined') {
+            encoded = LZString.compressToEncodedURIComponent(json);
+        } else {
+            encoded = btoa(unescape(encodeURIComponent(json)));
+        }
         return window.location.origin + '/report.html?report=' + encoded;
     } catch(e) {
         return window.location.href;
