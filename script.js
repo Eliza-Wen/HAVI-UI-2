@@ -860,7 +860,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // LANGUAGE SWITCHING
 // ============================================
 
-const translations = {
+// Renamed to avoid conflict with i18n.js `const translations`
+const uiTranslations = {
     en: {
         navHome: 'Home',
         navArticles: 'Articles',
@@ -937,29 +938,35 @@ const translations = {
 
 window.currentLanguage = 'en';
 
-window.changeLanguage = function(lang) {
-    const t = translations[lang] || translations.en;
-    window.currentLanguage = lang;
+// Extend i18n.js changeLanguage: call the original (handles currentLanguage + data-i18n)
+// then also update our ID-based UI elements
+(function() {
+    const _i18nChange = window.changeLanguage; // reference to i18n.js version
 
-    const ids = [
-        'navHome','navArticles','navInsurance','navLegal','navSignIn',
-        'heroLabel','heroTitle','heroDescription','heroBtn1','heroBtn2',
-        'tabUpload','tabChat','tabReport',
-        'uploadText','uploadSubtext','analyzeBtnText'
-    ];
+    window.changeLanguage = function(lang) {
+        // Let i18n.js update its internal currentLanguage + data-i18n elements
+        if (typeof _i18nChange === 'function') _i18nChange(lang);
 
-    ids.forEach(id => {
-        const el = document.getElementById(id);
-        if (el && t[id] !== undefined) el.textContent = t[id];
-    });
-};
+        window.currentLanguage = lang;
+        const t = uiTranslations[lang] || uiTranslations.en;
 
-// Language selector
-document.addEventListener('DOMContentLoaded', function() {
-    const languageSelector = document.querySelector('.language-selector');
-    if (languageSelector) {
-        languageSelector.addEventListener('change', function(e) {
-            window.changeLanguage(e.target.value);
+        // Update our ID-based elements
+        const ids = [
+            'navHome','navArticles','navInsurance','navLegal','navSignIn',
+            'heroLabel','heroTitle','heroDescription','heroBtn1','heroBtn2',
+            'tabUpload','tabChat','tabReport',
+            'uploadText','uploadSubtext','analyzeBtnText'
+        ];
+
+        ids.forEach(function(id) {
+            const el = document.getElementById(id);
+            if (el && t[id] !== undefined) el.textContent = t[id];
         });
-    }
-});
+
+        // Keep selector in sync
+        const sel = document.querySelector('.language-selector');
+        if (sel) sel.value = lang;
+    };
+})();
+
+// No extra DOMContentLoaded listener needed — i18n.js and the inline onchange handle it.
