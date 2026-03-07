@@ -307,7 +307,9 @@ window.sendMessage = async function() {
             throw new Error('Invalid response format from API');
         }
         
-        const aiResponse = data.candidates[0].content.parts[0].text;
+        // Strip markdown code blocks if present
+        let aiResponse = data.candidates[0].content.parts[0].text;
+        aiResponse = aiResponse.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
         
         // Remove loading indicator
         loadingDiv.remove();
@@ -396,15 +398,25 @@ window.analyzeReport = async function() {
         }
         
         const data = await response.json();
-        const responseText = data.candidates[0].content.parts[0].text;
+        
+        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts) {
+            console.error('Unexpected API response structure:', data);
+            throw new Error('Invalid response format from API');
+        }
+        
+        let rawText = data.candidates[0].content.parts[0].text;
+        
+        // Strip markdown code blocks if present
+        rawText = rawText.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
         
         // Parse and render the report
         let report;
         try {
-            report = JSON.parse(responseText);
+            report = JSON.parse(rawText);
         } catch (parseErr) {
-            console.error('Failed to parse response:', responseText);
-            throw new Error('Invalid response format from API');
+            console.error('JSON parse error:', parseErr);
+            console.error('Raw text was:', rawText);
+            throw new Error('Could not parse AI response. Please try again.');
         }
         
         renderAnalysisReport(report);
