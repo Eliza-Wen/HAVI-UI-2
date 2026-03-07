@@ -21,10 +21,10 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'No message parts provided' });
     }
     
-    const modelName = 'gemini-1.5-flash';
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
+    const modelName = 'gemini-1.5-flash';\n    const apiUrl = `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
     
     console.log('Calling Gemini API with model:', modelName);
+    console.log('API endpoint:', apiUrl.replace(GEMINI_API_KEY, 'YOUR_KEY'));
     
     const geminiRes = await fetch(apiUrl, {
       method: 'POST',
