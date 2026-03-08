@@ -368,18 +368,17 @@
         <div class="container navbar-container">
             <div class="nav-brand">HAVI</div>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="articles.html">Articles</a></li>
-                <li><a href="insurance.html" class="active">Insurance</a></li>
-                <li><a href="legal.html">Legal</a></li>
-                <li><a href="#" class="sign-in-btn">Sign In</a></li>
+                <li><a href="index.html" id="navHome">Home</a></li>
+                <li><a href="articles.html" id="navArticles">Articles</a></li>
+                <li><a href="insurance.html" class="active" id="navInsurance">Insurance</a></li>
+                <li><a href="legal.html" id="navLegal">Legal</a></li>
+                <li><a href="#" class="sign-in-btn" id="navSignIn">Sign In</a></li>
                 <li>
-                    <select class="language-selector" id="languageSelector">
-                        <option value="en">🌐 EN</option>
-                        <option value="es">ES</option>
-                        <option value="fr">FR</option>
-                        <option value="de">DE</option>
-                        <option value="zh">ZH</option>
+                    <select class="language-selector" id="languageSelector" onchange="changeLanguage(this.value)">
+                        <option value="en">English</option>
+                        <option value="zh-CN">简体中文</option>
+                        <option value="zh-TW">繁體中文</option>
+                        <option value="es">Español</option>
                     </select>
                 </li>
             </ul>
@@ -389,8 +388,8 @@
     <!-- Page Content -->
     <div class="insurance-page">
         <div class="container">
-            <h1 class="insurance-page-title">Health Insurance Products</h1>
-            <p class="insurance-page-subtitle">Choose the right coverage for your peace of mind and health security during your cancer journey</p>
+            <h1 class="insurance-page-title" id="pageTitle">Health Insurance Products</h1>
+            <p class="insurance-page-subtitle" id="pageSubtitle">Choose the right coverage for your peace of mind and health security during your cancer journey</p>
 
             <!-- Products Grid -->
             <div class="insurance-products-grid">
@@ -398,76 +397,67 @@
                 <div class="insurance-product">
                     <div class="product-icon">🛡️</div>
                     <h3 class="product-name">MediCare Plus</h3>
-                    <p class="product-category">Critical Illness Insurance</p>
-                    <p class="product-desc">Comprehensive coverage for 100+ critical illnesses including all major cancers. Lump sum payout upon diagnosis with no waiting period.</p>
-                    
+                    <p class="product-category" id="prod1Cat">Critical Illness Insurance</p>
+                    <p class="product-desc" id="prod1Desc">Comprehensive coverage for 100+ critical illnesses including all major cancers. Lump sum payout upon diagnosis with no waiting period.</p>
                     <div class="product-highlights">
                         <ul class="highlight-list">
-                            <li>Coverage up to $500,000</li>
-                            <li>Cancer treatment support</li>
-                            <li>24/7 medical hotline</li>
-                            <li>Second opinion services</li>
+                            <li id="prod1h1">Coverage up to $500,000</li>
+                            <li id="prod1h2">Cancer treatment support</li>
+                            <li id="prod1h3">24/7 medical hotline</li>
+                            <li id="prod1h4">Second opinion services</li>
                         </ul>
                     </div>
-
                     <div class="product-price">
-                        <div class="price-label">Starting from</div>
+                        <div class="price-label" id="priceLbl1">Starting from</div>
                         <div class="price">$150</div>
-                        <div class="price-period">/month</div>
+                        <div class="price-period" id="pricePer1">/month</div>
                     </div>
-
-                    <button class="product-btn" onclick="learnMore('MediCare Plus')">Learn More</button>
+                    <button class="product-btn" id="btn1" onclick="learnMore('MediCare Plus')">Learn More</button>
                 </div>
 
                 <!-- Product 2: HealthGuard Premium (Featured) -->
                 <div class="insurance-product featured">
-                    <div class="product-badge">Popular</div>
+                    <div class="product-badge" id="prod2Badge">Popular</div>
                     <div class="product-icon">💙</div>
                     <h3 class="product-name">HealthGuard Premium</h3>
-                    <p class="product-category">Medical & Critical Illness</p>
-                    <p class="product-desc">All-in-one protection combining hospitalization, surgery, and critical illness coverage with cancer-specific benefits.</p>
-                    
+                    <p class="product-category" id="prod2Cat">Medical & Critical Illness</p>
+                    <p class="product-desc" id="prod2Desc">All-in-one protection combining hospitalization, surgery, and critical illness coverage with cancer-specific benefits.</p>
                     <div class="product-highlights">
                         <ul class="highlight-list">
-                            <li>Unlimited annual coverage</li>
-                            <li>Cancer specialist access</li>
-                            <li>Global treatment coverage</li>
-                            <li>Experimental therapy support</li>
+                            <li id="prod2h1">Unlimited annual coverage</li>
+                            <li id="prod2h2">Cancer specialist access</li>
+                            <li id="prod2h3">Global treatment coverage</li>
+                            <li id="prod2h4">Experimental therapy support</li>
                         </ul>
                     </div>
-
                     <div class="product-price">
-                        <div class="price-label">Starting from</div>
+                        <div class="price-label" id="priceLbl2">Starting from</div>
                         <div class="price">$280</div>
-                        <div class="price-period">/month</div>
+                        <div class="price-period" id="pricePer2">/month</div>
                     </div>
-
-                    <button class="product-btn" onclick="learnMore('HealthGuard Premium')">Learn More</button>
+                    <button class="product-btn" id="btn2" onclick="learnMore('HealthGuard Premium')">Learn More</button>
                 </div>
 
                 <!-- Product 3: CancerCare Shield -->
                 <div class="insurance-product">
                     <div class="product-icon">🏥</div>
                     <h3 class="product-name">CancerCare Shield</h3>
-                    <p class="product-category">Specialized Cancer Insurance</p>
-                    <p class="product-desc">Dedicated cancer insurance with comprehensive coverage for diagnosis, treatment, and recovery support.</p>
-                    
+                    <p class="product-category" id="prod3Cat">Specialized Cancer Insurance</p>
+                    <p class="product-desc" id="prod3Desc">Dedicated cancer insurance with comprehensive coverage for diagnosis, treatment, and recovery support.</p>
                     <div class="product-highlights">
                         <ul class="highlight-list">
-                            <li>Coverage up to $1,000,000</li>
-                            <li>Immunotherapy coverage</li>
-                            <li>Clinical trial support</li>
-                            <li>Rehabilitation care</li>
+                            <li id="prod3h1">Coverage up to $1,000,000</li>
+                            <li id="prod3h2">Immunotherapy coverage</li>
+                            <li id="prod3h3">Clinical trial support</li>
+                            <li id="prod3h4">Rehabilitation care</li>
                         </ul>
                     </div>
-
                     <div class="product-price">
-                        <div class="price-label">Starting from</div>
+                        <div class="price-label" id="priceLbl3">Starting from</div>
                         <div class="price">$200</div>
-                        <div class="price-period">/month</div>
+                        <div class="price-period" id="pricePer3">/month</div>
                     </div>
-
-                    <button class="product-btn" onclick="learnMore('CancerCare Shield')">Learn More</button>
+                    <button class="product-btn" id="btn3" onclick="learnMore('CancerCare Shield')">Learn More</button>
                 </div>
             </div>
         </div>
@@ -476,66 +466,26 @@
     <!-- Comparison Section -->
     <div class="comparison-section">
         <div class="container">
-            <h2 class="comparison-title">Compare Our Plans</h2>
+            <h2 class="comparison-title" id="compareTitle">Compare Our Plans</h2>
             <div class="comparison-table">
                 <table>
                     <thead>
                         <tr>
-                            <th>Feature</th>
+                            <th id="thFeature">Feature</th>
                             <th>MediCare Plus</th>
                             <th>HealthGuard Premium</th>
                             <th>CancerCare Shield</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><strong>Coverage Amount</strong></td>
-                            <td>Up to $500K</td>
-                            <td>Unlimited</td>
-                            <td>Up to $1M</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Hospitalization</strong></td>
-                            <td class="checkmark">✓</td>
-                            <td class="checkmark">✓</td>
-                            <td class="checkmark">✓</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Critical Illness</strong></td>
-                            <td class="checkmark">✓</td>
-                            <td class="checkmark">✓</td>
-                            <td class="checkmark">✓</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Cancer Specialist Access</strong></td>
-                            <td>Limited</td>
-                            <td class="checkmark">✓</td>
-                            <td class="checkmark">✓</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Immunotherapy</strong></td>
-                            <td>Partial</td>
-                            <td class="checkmark">✓</td>
-                            <td class="checkmark">✓</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Global Coverage</strong></td>
-                            <td>Domestic</td>
-                            <td class="checkmark">✓</td>
-                            <td class="checkmark">✓</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Second Opinion</strong></td>
-                            <td class="checkmark">✓</td>
-                            <td class="checkmark">✓</td>
-                            <td class="checkmark">✓</td>
-                        </tr>
-                        <tr>
-                            <td><strong>24/7 Support</strong></td>
-                            <td class="checkmark">✓</td>
-                            <td class="checkmark">✓</td>
-                            <td class="checkmark">✓</td>
-                        </tr>
+                        <tr><td id="rowCoverage"><strong id="rowCoverageLabel">Coverage Amount</strong></td><td id="cov1">Up to $500K</td><td id="cov2">Unlimited</td><td id="cov3">Up to $1M</td></tr>
+                        <tr><td id="rowHosp"><strong id="rowHospLabel">Hospitalization</strong></td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                        <tr><td id="rowCrit"><strong id="rowCritLabel">Critical Illness</strong></td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                        <tr><td id="rowSpec"><strong id="rowSpecLabel">Cancer Specialist Access</strong></td><td id="spec1">Limited</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                        <tr><td id="rowImmuno"><strong id="rowImmunoLabel">Immunotherapy</strong></td><td id="immuno1">Partial</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                        <tr><td id="rowGlobal"><strong id="rowGlobalLabel">Global Coverage</strong></td><td id="global1">Domestic</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                        <tr><td id="rowOpinion"><strong id="rowOpinionLabel">Second Opinion</strong></td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                        <tr><td id="rowSupport"><strong id="rowSupportLabel">24/7 Support</strong></td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -545,55 +495,51 @@
     <!-- FAQ Section -->
     <div class="faq-section">
         <div class="container">
-            <h2 class="faq-title">Frequently Asked Questions</h2>
+            <h2 class="faq-title" id="faqTitle">Frequently Asked Questions</h2>
             <div class="faq-container">
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFAQ(this)">
-                        <span>What conditions are covered?</span>
+                        <span id="faq1Q">What conditions are covered?</span>
                         <span class="faq-toggle">▼</span>
                     </div>
                     <div class="faq-answer">
-                        <p class="faq-text">All our plans cover 100+ critical illnesses including all major types of cancer, heart disease, kidney failure, and more. Each plan has specific coverage details outlined in the policy documents.</p>
+                        <p class="faq-text" id="faq1A">All our plans cover 100+ critical illnesses including all major types of cancer, heart disease, kidney failure, and more. Each plan has specific coverage details outlined in the policy documents.</p>
                     </div>
                 </div>
-
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFAQ(this)">
-                        <span>Is there a waiting period?</span>
+                        <span id="faq2Q">Is there a waiting period?</span>
                         <span class="faq-toggle">▼</span>
                     </div>
                     <div class="faq-answer">
-                        <p class="faq-text">MediCare Plus offers lump sum payout with no waiting period. Other plans may have standard waiting periods as per policy terms. Please read the policy documents or contact us for details.</p>
+                        <p class="faq-text" id="faq2A">MediCare Plus offers lump sum payout with no waiting period. Other plans may have standard waiting periods as per policy terms. Please read the policy documents or contact us for details.</p>
                     </div>
                 </div>
-
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFAQ(this)">
-                        <span>How do I claim?</span>
+                        <span id="faq3Q">How do I claim?</span>
                         <span class="faq-toggle">▼</span>
                     </div>
                     <div class="faq-answer">
-                        <p class="faq-text">Claims can be filed through our online portal or by contacting our 24/7 support team. Most claims are processed within 7-10 business days. Required documents include medical reports and diagnosis confirmation.</p>
+                        <p class="faq-text" id="faq3A">Claims can be filed through our online portal or by contacting our 24/7 support team. Most claims are processed within 7-10 business days. Required documents include medical reports and diagnosis confirmation.</p>
                     </div>
                 </div>
-
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFAQ(this)">
-                        <span>Can I switch plans?</span>
+                        <span id="faq4Q">Can I switch plans?</span>
                         <span class="faq-toggle">▼</span>
                     </div>
                     <div class="faq-answer">
-                        <p class="faq-text">Yes, you can switch between plans at any time. Your coverage will be adjusted accordingly, and there are no penalties for switching. Contact our team to discuss your options.</p>
+                        <p class="faq-text" id="faq4A">Yes, you can switch between plans at any time. Your coverage will be adjusted accordingly, and there are no penalties for switching. Contact our team to discuss your options.</p>
                     </div>
                 </div>
-
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFAQ(this)">
-                        <span>What about pre-existing conditions?</span>
+                        <span id="faq5Q">What about pre-existing conditions?</span>
                         <span class="faq-toggle">▼</span>
                     </div>
                     <div class="faq-answer">
-                        <p class="faq-text">Coverage for pre-existing conditions depends on the specific plan and policy terms. We recommend discussing your medical history with our team to find the best option for you.</p>
+                        <p class="faq-text" id="faq5A">Coverage for pre-existing conditions depends on the specific plan and policy terms. We recommend discussing your medical history with our team to find the best option for you.</p>
                     </div>
                 </div>
             </div>
@@ -605,22 +551,22 @@
         <div class="container footer-content">
             <div class="footer-section">
                 <h3>HAVI</h3>
-                <p>Evidence-based cancer guidance for confident decisions.</p>
+                <p id="footerTagline">Evidence-based cancer guidance for confident decisions.</p>
             </div>
             <div class="footer-links">
                 <div class="footer-column">
-                    <a href="index.html">Home</a>
-                    <a href="articles.html">Articles</a>
+                    <a href="index.html" id="footerHome">Home</a>
+                    <a href="articles.html" id="footerArticles">Articles</a>
                 </div>
                 <div class="footer-column">
-                    <a href="insurance.html">Insurance</a>
-                    <a href="legal.html">Legal</a>
-                    <a href="legal.html">Privacy</a>
+                    <a href="insurance.html" id="footerInsurance">Insurance</a>
+                    <a href="legal.html" id="footerLegal">Legal</a>
+                    <a href="legal.html" id="footerPrivacy">Privacy</a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 HAVI. All rights reserved.</p>
+            <p id="footerCopyright">&copy; 2026 HAVI. All rights reserved.</p>
         </div>
     </footer>
 
@@ -628,21 +574,194 @@
         // Toggle FAQ items
         function toggleFAQ(element) {
             const faqItem = element.parentElement;
-            const allItems = document.querySelectorAll('.faq-item');
-            
-            allItems.forEach(item => {
-                if (item !== faqItem) {
-                    item.classList.remove('active');
-                }
+            document.querySelectorAll('.faq-item').forEach(item => {
+                if (item !== faqItem) item.classList.remove('active');
             });
-            
             faqItem.classList.toggle('active');
         }
 
         // Learn more button
         function learnMore(productName) {
-            alert(`Thank you for your interest in ${productName}! Our team will contact you shortly with more information.`);
+            alert('Thank you for your interest in ' + productName + '! Our team will contact you shortly with more information.');
         }
+
+        // ── Insurance page translations ────────────────────────────────
+        const insuranceTrans = {
+            en: {
+                navHome:'Home', navArticles:'Articles', navInsurance:'Insurance', navLegal:'Legal', navSignIn:'Sign In',
+                pageTitle:'Health Insurance Products',
+                pageSubtitle:'Choose the right coverage for your peace of mind and health security during your cancer journey',
+                prod1Cat:'Critical Illness Insurance',
+                prod1Desc:'Comprehensive coverage for 100+ critical illnesses including all major cancers. Lump sum payout upon diagnosis with no waiting period.',
+                prod1h1:'Coverage up to $500,000', prod1h2:'Cancer treatment support', prod1h3:'24/7 medical hotline', prod1h4:'Second opinion services',
+                prod2Badge:'Popular', prod2Cat:'Medical & Critical Illness',
+                prod2Desc:'All-in-one protection combining hospitalization, surgery, and critical illness coverage with cancer-specific benefits.',
+                prod2h1:'Unlimited annual coverage', prod2h2:'Cancer specialist access', prod2h3:'Global treatment coverage', prod2h4:'Experimental therapy support',
+                prod3Cat:'Specialized Cancer Insurance',
+                prod3Desc:'Dedicated cancer insurance with comprehensive coverage for diagnosis, treatment, and recovery support.',
+                prod3h1:'Coverage up to $1,000,000', prod3h2:'Immunotherapy coverage', prod3h3:'Clinical trial support', prod3h4:'Rehabilitation care',
+                priceLbl:'Starting from', pricePer:'/month', learnMoreBtn:'Learn More',
+                compareTitle:'Compare Our Plans',
+                thFeature:'Feature', rowCoverageLabel:'Coverage Amount', cov1:'Up to $500K', cov2:'Unlimited', cov3:'Up to $1M',
+                rowHospLabel:'Hospitalization', rowCritLabel:'Critical Illness', rowSpecLabel:'Cancer Specialist Access',
+                spec1:'Limited', rowImmunoLabel:'Immunotherapy', immuno1:'Partial', rowGlobalLabel:'Global Coverage', global1:'Domestic',
+                rowOpinionLabel:'Second Opinion', rowSupportLabel:'24/7 Support',
+                faqTitle:'Frequently Asked Questions',
+                faq1Q:'What conditions are covered?',
+                faq1A:'All our plans cover 100+ critical illnesses including all major types of cancer, heart disease, kidney failure, and more. Each plan has specific coverage details outlined in the policy documents.',
+                faq2Q:'Is there a waiting period?',
+                faq2A:'MediCare Plus offers lump sum payout with no waiting period. Other plans may have standard waiting periods as per policy terms. Please read the policy documents or contact us for details.',
+                faq3Q:'How do I claim?',
+                faq3A:'Claims can be filed through our online portal or by contacting our 24/7 support team. Most claims are processed within 7-10 business days. Required documents include medical reports and diagnosis confirmation.',
+                faq4Q:'Can I switch plans?',
+                faq4A:'Yes, you can switch between plans at any time. Your coverage will be adjusted accordingly, and there are no penalties for switching. Contact our team to discuss your options.',
+                faq5Q:'What about pre-existing conditions?',
+                faq5A:'Coverage for pre-existing conditions depends on the specific plan and policy terms. We recommend discussing your medical history with our team to find the best option for you.',
+                footerTagline:'Evidence-based cancer guidance for confident decisions.',
+                footerCopyright:'© 2026 HAVI. All rights reserved.',
+                footerHome:'Home', footerArticles:'Articles', footerInsurance:'Insurance', footerLegal:'Legal', footerPrivacy:'Privacy',
+            },
+            'zh-CN': {
+                navHome:'首页', navArticles:'文章', navInsurance:'保险', navLegal:'法律', navSignIn:'登录',
+                pageTitle:'健康保险产品',
+                pageSubtitle:'在您的癌症康复旅程中，选择最适合您的保障方案，保护您的身心健康',
+                prod1Cat:'重疾险',
+                prod1Desc:'全面覆盖100余种重大疾病，包括所有主要癌症类型。确诊后一次性理赔，无等待期。',
+                prod1h1:'最高保额50万美元', prod1h2:'癌症治疗支持', prod1h3:'24小时医疗热线', prod1h4:'二诊意见服务',
+                prod2Badge:'热门', prod2Cat:'医疗及重疾险',
+                prod2Desc:'住院、手术与重疾险三合一保障，并含癌症专属权益。',
+                prod2h1:'无限额年度保障', prod2h2:'癌症专科医生通道', prod2h3:'全球医疗保障', prod2h4:'实验性疗法支持',
+                prod3Cat:'癌症专项保险',
+                prod3Desc:'专为癌症设计的保险，全面覆盖诊断、治疗与康复全程。',
+                prod3h1:'最高保额100万美元', prod3h2:'免疫疗法保障', prod3h3:'临床试验支持', prod3h4:'康复护理',
+                priceLbl:'最低起价', pricePer:'/月', learnMoreBtn:'了解更多',
+                compareTitle:'方案对比',
+                thFeature:'功能', rowCoverageLabel:'保额', cov1:'最高50万美元', cov2:'无限额', cov3:'最高100万美元',
+                rowHospLabel:'住院保障', rowCritLabel:'重疾保障', rowSpecLabel:'癌症专科医生',
+                spec1:'有限', rowImmunoLabel:'免疫疗法', immuno1:'部分覆盖', rowGlobalLabel:'全球保障', global1:'仅限国内',
+                rowOpinionLabel:'二诊意见', rowSupportLabel:'24小时支持',
+                faqTitle:'常见问题',
+                faq1Q:'哪些疾病在保障范围内？',
+                faq1A:'我们的所有方案均涵盖100余种重大疾病，包括所有主要癌症类型、心脏病、肾衰竭等。每个方案的具体保障内容详见保单条款。',
+                faq2Q:'是否有等待期？',
+                faq2A:'MediCare Plus提供无等待期的一次性理赔。其他方案可能按保单条款设有标准等待期。请阅读保单文件或联系我们了解详情。',
+                faq3Q:'如何申请理赔？',
+                faq3A:'您可以通过我们的在线平台提交理赔申请，或拨打24小时客服热线。大多数理赔在7-10个工作日内处理完毕。需要提供医疗报告及诊断证明等文件。',
+                faq4Q:'可以更换方案吗？',
+                faq4A:'是的，您可以随时更换方案，保障会相应调整，无任何更换罚金。请联系我们的团队了解您的选项。',
+                faq5Q:'既往症如何处理？',
+                faq5A:'既往症的保障取决于具体方案和保单条款。建议您与我们的团队讨论您的病史，以便找到最适合您的方案。',
+                footerTagline:'循证癌症指导，助您自信决策。',
+                footerCopyright:'© 2026 HAVI. 保留所有权利。',
+                footerHome:'首页', footerArticles:'文章', footerInsurance:'保险', footerLegal:'法律', footerPrivacy:'隐私政策',
+            },
+            'zh-TW': {
+                navHome:'首頁', navArticles:'文章', navInsurance:'保險', navLegal:'法律', navSignIn:'登入',
+                pageTitle:'健康保險產品',
+                pageSubtitle:'在您的癌症康復旅程中，選擇最適合您的保障方案，保護您的身心健康',
+                prod1Cat:'重疾險',
+                prod1Desc:'全面覆蓋100餘種重大疾病，包括所有主要癌症類型。確診後一次性理賠，無等待期。',
+                prod1h1:'最高保額50萬美元', prod1h2:'癌症治療支援', prod1h3:'24小時醫療熱線', prod1h4:'第二意見服務',
+                prod2Badge:'熱門', prod2Cat:'醫療及重疾險',
+                prod2Desc:'住院、手術與重疾險三合一保障，並含癌症專屬權益。',
+                prod2h1:'無限額年度保障', prod2h2:'癌症專科醫師通道', prod2h3:'全球醫療保障', prod2h4:'實驗性療法支援',
+                prod3Cat:'癌症專項保險',
+                prod3Desc:'專為癌症設計的保險，全面覆蓋診斷、治療與康復全程。',
+                prod3h1:'最高保額100萬美元', prod3h2:'免疫療法保障', prod3h3:'臨床試驗支援', prod3h4:'康復護理',
+                priceLbl:'最低起價', pricePer:'/月', learnMoreBtn:'瞭解更多',
+                compareTitle:'方案比較',
+                thFeature:'功能', rowCoverageLabel:'保額', cov1:'最高50萬美元', cov2:'無限額', cov3:'最高100萬美元',
+                rowHospLabel:'住院保障', rowCritLabel:'重疾保障', rowSpecLabel:'癌症專科醫師',
+                spec1:'有限', rowImmunoLabel:'免疫療法', immuno1:'部分覆蓋', rowGlobalLabel:'全球保障', global1:'僅限國內',
+                rowOpinionLabel:'第二意見', rowSupportLabel:'24小時支援',
+                faqTitle:'常見問題',
+                faq1Q:'哪些疾病在保障範圍內？',
+                faq1A:'我們的所有方案均涵蓋100餘種重大疾病，包括所有主要癌症類型、心臟病、腎衰竭等。每個方案的具體保障內容詳見保單條款。',
+                faq2Q:'是否有等待期？',
+                faq2A:'MediCare Plus提供無等待期的一次性理賠。其他方案可能按保單條款設有標準等待期。請閱讀保單文件或聯絡我們瞭解詳情。',
+                faq3Q:'如何申請理賠？',
+                faq3A:'您可以透過我們的線上平台提交理賠申請，或撥打24小時客服熱線。大多數理賠在7-10個工作日內處理完畢。需要提供醫療報告及診斷證明等文件。',
+                faq4Q:'可以更換方案嗎？',
+                faq4A:'是的，您可以隨時更換方案，保障會相應調整，無任何更換罰金。請聯絡我們的團隊瞭解您的選項。',
+                faq5Q:'既往症如何處理？',
+                faq5A:'既往症的保障取決於具體方案和保單條款。建議您與我們的團隊討論您的病史，以便找到最適合您的方案。',
+                footerTagline:'循證癌症指導，助您自信決策。',
+                footerCopyright:'© 2026 HAVI. 保留所有權利。',
+                footerHome:'首頁', footerArticles:'文章', footerInsurance:'保險', footerLegal:'法律', footerPrivacy:'隱私政策',
+            },
+            es: {
+                navHome:'Inicio', navArticles:'Artículos', navInsurance:'Seguro', navLegal:'Legal', navSignIn:'Iniciar sesión',
+                pageTitle:'Productos de Seguro Médico',
+                pageSubtitle:'Elige la cobertura adecuada para tu tranquilidad y seguridad de salud durante tu camino contra el cáncer',
+                prod1Cat:'Seguro de Enfermedad Crítica',
+                prod1Desc:'Cobertura integral para más de 100 enfermedades críticas, incluyendo todos los principales cánceres. Pago único al diagnóstico sin período de espera.',
+                prod1h1:'Cobertura hasta $500,000', prod1h2:'Apoyo al tratamiento del cáncer', prod1h3:'Línea médica 24/7', prod1h4:'Servicios de segunda opinión',
+                prod2Badge:'Popular', prod2Cat:'Médico y Enfermedad Crítica',
+                prod2Desc:'Protección integral que combina hospitalización, cirugía y enfermedad crítica con beneficios específicos para el cáncer.',
+                prod2h1:'Cobertura anual ilimitada', prod2h2:'Acceso a especialistas en cáncer', prod2h3:'Cobertura médica global', prod2h4:'Apoyo a terapias experimentales',
+                prod3Cat:'Seguro Especializado en Cáncer',
+                prod3Desc:'Seguro dedicado al cáncer con cobertura integral para diagnóstico, tratamiento y recuperación.',
+                prod3h1:'Cobertura hasta $1,000,000', prod3h2:'Cobertura de inmunoterapia', prod3h3:'Apoyo a ensayos clínicos', prod3h4:'Cuidado de rehabilitación',
+                priceLbl:'Desde', pricePer:'/mes', learnMoreBtn:'Más Información',
+                compareTitle:'Compara Nuestros Planes',
+                thFeature:'Característica', rowCoverageLabel:'Monto de Cobertura', cov1:'Hasta $500K', cov2:'Ilimitada', cov3:'Hasta $1M',
+                rowHospLabel:'Hospitalización', rowCritLabel:'Enfermedad Crítica', rowSpecLabel:'Especialista en Cáncer',
+                spec1:'Limitado', rowImmunoLabel:'Inmunoterapia', immuno1:'Parcial', rowGlobalLabel:'Cobertura Global', global1:'Solo Nacional',
+                rowOpinionLabel:'Segunda Opinión', rowSupportLabel:'Soporte 24/7',
+                faqTitle:'Preguntas Frecuentes',
+                faq1Q:'¿Qué condiciones están cubiertas?',
+                faq1A:'Todos nuestros planes cubren más de 100 enfermedades críticas, incluyendo todos los principales tipos de cáncer, enfermedades cardíacas, insuficiencia renal y más. Cada plan tiene detalles de cobertura específicos en los documentos de póliza.',
+                faq2Q:'¿Hay un período de espera?',
+                faq2A:'MediCare Plus ofrece pago único sin período de espera. Otros planes pueden tener períodos de espera estándar según los términos de la póliza. Lea los documentos de póliza o contáctenos para más detalles.',
+                faq3Q:'¿Cómo hago un reclamo?',
+                faq3A:'Los reclamos se pueden presentar a través de nuestro portal en línea o contactando a nuestro equipo de soporte 24/7. La mayoría de los reclamos se procesan en 7-10 días hábiles. Los documentos requeridos incluyen informes médicos y confirmación de diagnóstico.',
+                faq4Q:'¿Puedo cambiar de plan?',
+                faq4A:'Sí, puedes cambiar de plan en cualquier momento. Tu cobertura se ajustará en consecuencia y no hay penalizaciones por cambiar. Contacta a nuestro equipo para discutir tus opciones.',
+                faq5Q:'¿Qué pasa con las condiciones preexistentes?',
+                faq5A:'La cobertura para condiciones preexistentes depende del plan específico y los términos de la póliza. Recomendamos discutir tu historial médico con nuestro equipo para encontrar la mejor opción para ti.',
+                footerTagline:'Orientación oncológica basada en evidencia para decisiones seguras.',
+                footerCopyright:'© 2026 HAVI. Todos los derechos reservados.',
+                footerHome:'Inicio', footerArticles:'Artículos', footerInsurance:'Seguro', footerLegal:'Legal', footerPrivacy:'Privacidad',
+            }
+        };
+
+        function changeLanguage(lang) {
+            localStorage.setItem('haviLanguage', lang);
+            const t = insuranceTrans[lang] || insuranceTrans.en;
+            const ids = [
+                'navHome','navArticles','navInsurance','navLegal','navSignIn',
+                'pageTitle','pageSubtitle',
+                'prod1Cat','prod1Desc','prod1h1','prod1h2','prod1h3','prod1h4',
+                'prod2Badge','prod2Cat','prod2Desc','prod2h1','prod2h2','prod2h3','prod2h4',
+                'prod3Cat','prod3Desc','prod3h1','prod3h2','prod3h3','prod3h4',
+                'priceLbl1','priceLbl2','priceLbl3','pricePer1','pricePer2','pricePer3',
+                'btn1','btn2','btn3',
+                'compareTitle','thFeature',
+                'rowCoverageLabel','cov1','cov2','cov3',
+                'rowHospLabel','rowCritLabel','rowSpecLabel','spec1',
+                'rowImmunoLabel','immuno1','rowGlobalLabel','global1',
+                'rowOpinionLabel','rowSupportLabel',
+                'faqTitle',
+                'faq1Q','faq1A','faq2Q','faq2A','faq3Q','faq3A','faq4Q','faq4A','faq5Q','faq5A',
+                'footerTagline','footerCopyright','footerHome','footerArticles','footerInsurance','footerLegal','footerPrivacy'
+            ];
+            ids.forEach(function(id) {
+                var key = id;
+                // price labels/periods share the same translation key
+                if (id === 'priceLbl1' || id === 'priceLbl2' || id === 'priceLbl3') key = 'priceLbl';
+                if (id === 'pricePer1' || id === 'pricePer2' || id === 'pricePer3') key = 'pricePer';
+                if (id === 'btn1' || id === 'btn2' || id === 'btn3') key = 'learnMoreBtn';
+                var el = document.getElementById(id);
+                if (el && t[key] !== undefined) el.textContent = t[key];
+            });
+            var sel = document.getElementById('languageSelector');
+            if (sel) sel.value = lang;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var saved = localStorage.getItem('haviLanguage') || 'en';
+            changeLanguage(saved);
+        });
     </script>
 </body>
 </html>
